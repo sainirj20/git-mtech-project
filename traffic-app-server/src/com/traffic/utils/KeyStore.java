@@ -1,25 +1,40 @@
 package com.traffic.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-public class KeyStore {
+interface Keys {
+	String[] keys = { "AIzaSyCd3gQRLIhHL7RPXWuMp2xwv3qlv662h7k", "AIzaSyB7Qbh8p3IbWZMGnKKRZ-oDpCBPsDHzQL0" };
+}
 
-	private final int size = 4;
-	private final BasicNameValuePair[] keys = new BasicNameValuePair[size];
+public class KeyStore implements Keys {
 
-	private int pointer = 0;
+	private static final List<String> keyStore = new ArrayList<>();
+	private static int pointer = 0;
 
-	KeyStore() {
-		keys[0] = new BasicNameValuePair("key", "AIzaSyCd3gQRLIhHL7RPXWuMp2xwv3qlv662h7k");
-		keys[1] = new BasicNameValuePair("key", "AIzaSyB7Qbh8p3IbWZMGnKKRZ-oDpCBPsDHzQL0");
-		keys[2] = new BasicNameValuePair("key", "AIzaSyCRIN3hdePOGMQ4bx6h5OwnzX0Fde-jWMI");
-		keys[3] = new BasicNameValuePair("key", "AIzaSyD3BzMVeXweNpE6ah60r0kr3FmI2ZTIYAc");
+	static {
+		for (int i = 0; i < keys.length; i++) {
+			keyStore.add(keys[i]);
+		}
 	}
 
-	public synchronized NameValuePair getKey() {
-		NameValuePair key = keys[pointer];
-		pointer = (pointer + 1) % size;
+	private KeyStore() {
+	}
+
+	public static synchronized NameValuePair getKey() {
+		if (keyStore.size() == 0) {
+			System.out.println("All Keys Died");
+			System.exit(1);
+		}
+		NameValuePair key = new BasicNameValuePair("key", keyStore.get(pointer));
+		pointer = (pointer + 1) % keyStore.size();
 		return key;
+	}
+
+	public static synchronized void removeKey(String key) {
+		keyStore.remove(key);
 	}
 }

@@ -15,7 +15,6 @@ import com.traffic.model.Place;
 
 public class URLBuilder {
 	private static String scheme = "https";
-	private static KeyStore keyStore = new KeyStore();
 
 	private static URL getURL(URIBuilder builder) {
 		URL url = null;
@@ -34,7 +33,7 @@ public class URLBuilder {
 
 	public static URL getPlaceApiURL(String placeId) {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(keyStore.getKey());
+		params.add(KeyStore.getKey());
 		params.add(new BasicNameValuePair("placeid", placeId));
 
 		URIBuilder builder = new URIBuilder();
@@ -65,7 +64,7 @@ public class URLBuilder {
 		builder.setScheme(scheme);
 		builder.setHost(RoadApi.url);
 		builder.setPath(RoadApi.path);
-		builder.setParameters(keyStore.getKey(), RoadApi.units, RoadApi.zoom);
+		builder.setParameters(KeyStore.getKey(), RoadApi.units, RoadApi.zoom);
 		builder.addParameters(params);
 		return getURL(builder);
 	}
@@ -77,7 +76,7 @@ public class URLBuilder {
 
 	public synchronized static URL getDirectionApi(Place source, Place dest) {
 		String customQuery = "" + new BasicNameValuePair("origin", source.getLatLong()) + '&'
-				+ new BasicNameValuePair("destination", dest.getLatLong()) + '&' + keyStore.getKey();
+				+ new BasicNameValuePair("destination", dest.getLatLong()) + '&' + KeyStore.getKey();
 
 		URIBuilder builder = new URIBuilder();
 		builder.setScheme(scheme);
@@ -95,7 +94,7 @@ public class URLBuilder {
 
 	public static URL getSnapToRoadsURL(Pair source, Pair dest) {
 		String path = source + "|" + dest;
-		String customQuery = "" + new BasicNameValuePair("path", path) + '&' + keyStore.getKey() + '&'
+		String customQuery = "" + new BasicNameValuePair("path", path) + '&' + KeyStore.getKey() + '&'
 				+ SnapToRoadsApi.interpolate;
 
 		URIBuilder builder = new URIBuilder();

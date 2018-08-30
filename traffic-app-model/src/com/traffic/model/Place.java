@@ -9,61 +9,76 @@ public class Place {
 	private Integer averageSpeed; // KPH
 	private Integer currentSpeed; // KPH
 
+	private boolean isUpdated = false; // not to be saved in db;
+
 	public Place(String placeId) {
 		this.placeId = placeId;
 	}
 
-	// Getters and setters
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
+	// getters and setters
+	public String getPlaceId() {
+		return placeId;
 	}
 
 	public Double getLat() {
 		return lat;
 	}
 
-	public void setLat(Double lat) {
-		this.lat = lat;
-	}
-
 	public Double getLng() {
 		return lng;
 	}
 
-	public void setLng(Double longitude) {
-		this.lng = longitude;
+	public String getAddress() {
+		return address;
 	}
 
 	public Integer getFreeFlowSpeed() {
 		return freeFlowSpeed;
 	}
 
-	public void setFreeFlowSpeed(Integer freeFlowSpeed) {
-		this.freeFlowSpeed = freeFlowSpeed;
+	public Integer getAverageSpeed() {
+		return averageSpeed;
 	}
 
 	public Integer getCurrentSpeed() {
 		return currentSpeed;
 	}
 
-	public void setCurrentSpeed(Integer currentSpeed) {
-		this.currentSpeed = currentSpeed;
+	public boolean isUpdated() {
+		return isUpdated;
 	}
 
-	public Integer getAverageSpeed() {
-		return averageSpeed;
+	public void setLat(Double lat) {
+		isUpdated = this.lat != lat;
+		this.lat = lat;
+	}
+
+	public void setLng(Double lng) {
+		isUpdated = this.lng != lng;
+		this.lng = lng;
+	}
+
+	public void setAddress(String address) {
+		if (null == address) {
+			return;
+		}
+		isUpdated = !address.equals(this.address);
+		this.address = address;
+	}
+
+	public void setFreeFlowSpeed(Integer freeFlowSpeed) {
+		isUpdated = this.freeFlowSpeed != freeFlowSpeed;
+		this.freeFlowSpeed = freeFlowSpeed;
 	}
 
 	public void setAverageSpeed(Integer averageSpeed) {
+		isUpdated = this.averageSpeed != averageSpeed;
 		this.averageSpeed = averageSpeed;
 	}
 
-	public String getPlaceId() {
-		return placeId;
+	public void setCurrentSpeed(Integer currentSpeed) {
+		isUpdated = this.currentSpeed != currentSpeed;
+		this.currentSpeed = currentSpeed;
 	}
 
 	@Override
@@ -99,12 +114,6 @@ public class Place {
 
 	public String getLatLong() {
 		return lat + "," + lng;
-	}
-
-	public void copySpeedDetails(Place place) {
-		freeFlowSpeed = place.getFreeFlowSpeed();
-		averageSpeed = place.getAverageSpeed();
-		currentSpeed = place.getCurrentSpeed();
 	}
 
 	public boolean isPlaceCongested() {

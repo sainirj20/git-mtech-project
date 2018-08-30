@@ -22,8 +22,19 @@ public class GoogleAPIsUtil {
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	}
 
-	public static Map<String, Object> getResponse(URL url) throws IOException {
+	private static String getKey(URL url) {
+		String[] querys = url.getQuery().split("&");
+		String key = null;
+		for (String query : querys) {
+			if (query.startsWith("key=")) {
+				key = query.replaceFirst("key=", "");
+				break;
+			}
+		}
+		return key;
+	}
 
+	public static Map<String, Object> getResponse(URL url) throws IOException {
 		Map<String, Object> response = null;
 		response = objectMapper.readValue(url, ref);
 		String status = (String) response.get("status");
@@ -32,6 +43,7 @@ public class GoogleAPIsUtil {
 		case "REQUEST_DENIED":
 			throw new RequestDeniedException((String) response.get("error_message"), url);
 		case "OVER_QUERY_LIMIT":
+			KeyStore.removeKey(getKey(url));
 			throw new OverQuertyLimitException((String) response.get("error_message"), url);
 		case "INVALID_ARGUMENT":
 			throw new InvalidArgumentException((String) response.get("error_message"), url);

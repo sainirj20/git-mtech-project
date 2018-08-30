@@ -1,8 +1,7 @@
-package com.traffic.map;
+package com.traffic.places;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,7 +17,16 @@ import com.traffic.utils.StopWatch;
 import com.traffic.utils.URLBuilder;
 
 public class PlacesGenerator {
-	private Map<String, Place> placesMap = new LinkedHashMap<String, Place>();
+	private final PlacesDao placesDao = new PlacesDao();
+	private final Map<String, Place> placesMap;
+
+	private final int threadPoolSize = 50;
+	private ExecutorService executorService = null;
+	private final List<Callable<Place>> callables = new ArrayList<Callable<Place>>();
+
+	public PlacesGenerator() {
+		placesMap = placesDao.getAll();
+	}
 
 	@SuppressWarnings("unchecked")
 	private void fetchFreeflowSpeed() throws IOException {
@@ -64,54 +72,54 @@ public class PlacesGenerator {
 	}
 
 	private void fetchPlacesDetails() {
-		final PlacesDao placesDao = new PlacesDao();
-
-		final int threadPoolSize = 50;
-		ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
-		List<Callable<Place>> callables = new ArrayList<Callable<Place>>();
-		List<Future<Place>> futures = null;
-
 		int threadCtr = 0, index = 0;
 		for (Entry<String, Place> entry : placesMap.entrySet()) {
 			Place place = entry.getValue();
-			try {
-				Place placeFromDB = placesDao.getByPlaceId(place.getPlaceId());
-				placeFromDB.copySpeedDetails(place);
-				if (!placeFromDB.hasLocationDetails()) {
-					if (threadCtr < threadPoolSize) {
-						callables.add(new PlaceDetailsTask(placeFromDB));
-						threadCtr++;
-					}
+			if (!place.hasLocationDetails() && place.isPlaceCongested()) {
+				if (threadCtr < threadPoolSize) {
+					callables.add(new PlaceDetailsTask(place));
+					threadCtr++;
 				}
-				if (threadCtr == threadPoolSize || (threadCtr > 0 && index == placesMap.size() - 1)) {
-					System.out.println("execute batch");
-					futures = executorService.invokeAll(callables);
-					for (Future<Place> future : futures) {
-						Place placeFuture = future.get();
-						if (null != placeFuture) {
-							placesDao.addOrUpdate(placeFuture);
-						}
-					}
-					callables.clear();
-					threadCtr = 0;
-				}
-				placesDao.addOrUpdate(placeFromDB);
-			} catch (Exception e) {
-				System.out.println("Error at: " + place.getPlaceId() + "  " + e.getMessage());
+			}
+			if (threadCtr == threadPoolSize) {
+				System.out.println("executing batch :: " + index + " of " + placesMap.size());
+				executeThreadPool();
+				threadCtr = 0;
 			}
 			index++;
 		}
-		executorService.shutdown();
+		executeThreadPool();
+	}
+
+	private void executeThreadPool() {
+		if (callables.size() == 0) {
+			return;
+		}
+		try {
+			List<Future<Place>> futures = executorService.invokeAll(callables);
+			for (Future<Place> future : futures) {
+				Place place = future.get();
+				placesDao.addOrUpdate(place);
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		callables.clear();
 	}
 
 	public Map<String, Place> generatePlaces() throws IOException {
 		StopWatch stopWatch = new StopWatch();
+		executorService = Executors.newFixedThreadPool(threadPoolSize);
+		System.out.print("fetching freeflowSpeed... ");
 		fetchFreeflowSpeed();
 		System.out.println("FreeflowSpeed fetched :: " + stopWatch.lap());
+		System.out.print("fetching currentSpeeds... ");
 		fetchCurrentSpeeds();
 		System.out.println("CurrentSpeeds fetched :: " + stopWatch.lap());
+		System.out.print("generating places... ");
 		fetchPlacesDetails();
 		System.out.println("Places Generated :: " + placesMap.size() + " :: " + stopWatch.totalTime());
+		executorService.shutdown();
 		return placesMap;
 	}
 }

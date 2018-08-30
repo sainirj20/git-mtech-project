@@ -45,7 +45,7 @@ public class PlacesDao implements MongoConstants {
 	}
 
 	public void addOrUpdate(Place place) {
-		if (null == place) {
+		if (null == place || !place.isUpdated()) {
 			return;
 		}
 		Document doc = mapper.toDocument(place);

@@ -2,14 +2,13 @@ package com.traffic.congestion;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.traffic.dao.CongestionDao;
 import com.traffic.dao.PlacesDao;
-import com.traffic.map.GraphGenerator;
-import com.traffic.map.PlacesGenerator;
+import com.traffic.graph.GraphGenerator;
 import com.traffic.model.Congestion;
 import com.traffic.model.Place;
+import com.traffic.places.PlacesGenerator;
 
 public class Processor {
 	final PlacesDao placesDao;

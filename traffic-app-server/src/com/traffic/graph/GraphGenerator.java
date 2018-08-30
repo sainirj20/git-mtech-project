@@ -1,4 +1,4 @@
-package com.traffic.map;
+package com.traffic.graph;
 
 import java.util.ArrayList;
 import java.util.List;

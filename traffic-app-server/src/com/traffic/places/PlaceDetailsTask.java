@@ -1,4 +1,4 @@
-package com.traffic.map;
+package com.traffic.places;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
