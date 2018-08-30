@@ -5,11 +5,9 @@ public class Place {
 	private Double lat;
 	private Double lng;
 	private String address;
-	private Integer freeFlowSpeed; // KPH
-	private Integer averageSpeed; // KPH
-	private Integer currentSpeed; // KPH
-
-	private boolean isUpdated = false; // not to be saved in db;
+	private Integer freeFlowSpeed; // KPH // not to be saved in db;
+	private Integer averageSpeed; // KPH // not to be saved in db;
+	private Integer currentSpeed; // KPH // not to be saved in db;
 
 	public Place(String placeId) {
 		this.placeId = placeId;
@@ -44,40 +42,27 @@ public class Place {
 		return currentSpeed;
 	}
 
-	public boolean isUpdated() {
-		return isUpdated;
-	}
-
 	public void setLat(Double lat) {
-		isUpdated = this.lat != lat;
 		this.lat = lat;
 	}
 
 	public void setLng(Double lng) {
-		isUpdated = this.lng != lng;
 		this.lng = lng;
 	}
 
 	public void setAddress(String address) {
-		if (null == address) {
-			return;
-		}
-		isUpdated = !address.equals(this.address);
 		this.address = address;
 	}
 
 	public void setFreeFlowSpeed(Integer freeFlowSpeed) {
-		isUpdated = this.freeFlowSpeed != freeFlowSpeed;
 		this.freeFlowSpeed = freeFlowSpeed;
 	}
 
 	public void setAverageSpeed(Integer averageSpeed) {
-		isUpdated = this.averageSpeed != averageSpeed;
 		this.averageSpeed = averageSpeed;
 	}
 
 	public void setCurrentSpeed(Integer currentSpeed) {
-		isUpdated = this.currentSpeed != currentSpeed;
 		this.currentSpeed = currentSpeed;
 	}
 

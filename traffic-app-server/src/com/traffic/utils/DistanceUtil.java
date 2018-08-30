@@ -4,9 +4,13 @@ import com.traffic.model.Place;
 
 public class DistanceUtil {
 
+	/** return's distance in KM */
 	public static double getDistance(Place p1, Place p2) {
-		double lon1 = p1.getLng();
+		if (p1.getLat() == null || p2.getLat() == null || p1.getLng() == null || p2.getLng() == null) {
+			return 100000;
+		}
 		double lat1 = p1.getLat();
+		double lon1 = p1.getLng();
 		double lat2 = p2.getLat();
 		double lon2 = p2.getLng();
 		double theta = lon1 - lon2;

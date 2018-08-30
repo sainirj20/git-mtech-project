@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -73,16 +72,15 @@ public class PlacesGenerator {
 
 	private void fetchPlacesDetails() {
 		int threadCtr = 0, index = 0;
-		for (Entry<String, Place> entry : placesMap.entrySet()) {
-			Place place = entry.getValue();
-			if (!place.hasLocationDetails() && place.isPlaceCongested()) {
-				if (threadCtr < threadPoolSize) {
+		for (Place place : placesMap.values()) {
+			if (!place.hasLocationDetails()) {
+				if (place.isPlaceCongested() && threadCtr < threadPoolSize) {
 					callables.add(new PlaceDetailsTask(place));
 					threadCtr++;
 				}
 			}
 			if (threadCtr == threadPoolSize) {
-				System.out.println("executing batch :: " + index + " of " + placesMap.size());
+				System.out.println("processed :: " + index + " of " + placesMap.size());
 				executeThreadPool();
 				threadCtr = 0;
 			}
@@ -116,7 +114,7 @@ public class PlacesGenerator {
 		System.out.print("fetching currentSpeeds... ");
 		fetchCurrentSpeeds();
 		System.out.println("CurrentSpeeds fetched :: " + stopWatch.lap());
-		System.out.print("generating places... ");
+		System.out.println("generating places... ");
 		fetchPlacesDetails();
 		System.out.println("Places Generated :: " + placesMap.size() + " :: " + stopWatch.totalTime());
 		executorService.shutdown();

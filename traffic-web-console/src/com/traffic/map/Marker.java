@@ -19,7 +19,7 @@ public class Marker {
 
 		for (Entry<String, Place> entry : places.entrySet()) {
 			Place p = entry.getValue();
-			if (p.isPlaceCongested() && p.hasLocationDetails()) {
+			if (p.isPlaceCongested()) {
 				result.add(p);
 			}
 
