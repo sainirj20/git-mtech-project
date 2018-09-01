@@ -9,6 +9,9 @@
         <dependent-module archiveName="traffic-app-database-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/traffic-app-database/traffic-app-database">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="traffic-app-server-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/traffic-app-server/traffic-app-server">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="traffic-web-console"/>
         <property name="java-output-path" value="/traffic-web-console/build/classes"/>
     </wb-module>

@@ -4,31 +4,20 @@ import com.traffic.model.Place;
 
 public class DistanceUtil {
 
+	private static double p = 0.017453292519943295; // Math.PI / 180
+	private static int diameterOfEarth = 12742;
+
 	/** return's distance in KM */
 	public static double getDistance(Place p1, Place p2) {
-		if (p1.getLat() == null || p2.getLat() == null || p1.getLng() == null || p2.getLng() == null) {
-			return 100000;
-		}
 		double lat1 = p1.getLat();
 		double lon1 = p1.getLng();
 		double lat2 = p2.getLat();
 		double lon2 = p2.getLng();
-		double theta = lon1 - lon2;
-		double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
-				+ Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-		dist = Math.acos(dist);
-		dist = rad2deg(dist);
-		dist = dist * 60 * 1.1515;
-		dist = dist * 1.609344;
-		return (dist);
-	}
 
-	private static double deg2rad(double deg) {
-		return (deg * Math.PI / 180.0);
-	}
+		double a = 0.5 - Math.cos((lat2 - lat1) * p) / 2
+				+ Math.cos(lat1 * p) * Math.cos(lat2 * p) * (1 - Math.cos((lon2 - lon1) * p)) / 2;
 
-	private static double rad2deg(double rad) {
-		return (rad * 180 / Math.PI);
+		return diameterOfEarth * Math.asin(Math.sqrt(a));
 	}
 
 	private DistanceUtil() {

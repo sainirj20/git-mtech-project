@@ -30,6 +30,11 @@
 			<artifactId>traffic-app-database</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.bits.traffic</groupId>
+			<artifactId>traffic-app-server</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>

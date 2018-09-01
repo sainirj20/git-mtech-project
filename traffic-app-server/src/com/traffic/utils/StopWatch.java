@@ -27,7 +27,8 @@ public class StopWatch {
 		totalTime += (System.currentTimeMillis() - startTime) / 1000;
 		long minutes = totalTime / 60;
 		long seconds = totalTime % 60;
+		long miliSeconds = totalTime % 1000;
 		startTime = System.currentTimeMillis();
-		return "[Total time taken :: " + minutes + " minutes " + seconds + " seconds]";
+		return "[Total time taken :: " + minutes + " min " + seconds + " sec " + miliSeconds + " ms]";
 	}
 }
