@@ -5,30 +5,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import com.traffic.dao.CongestionClustersDao;
+import com.traffic.congestion.CongestionManager.CongestionType;
+import com.traffic.dao.CityCongestionsDao;
+import com.traffic.model.Congestion;
 import com.traffic.model.Place;
 import com.traffic.places.PlacesGenerator;
+import com.traffic.utils.StopWatch;
 
 public class CongestionGenerator {
+	private CongestionManager manager = new CongestionManager();
+	private List<Congestion> smallCongestions = new ArrayList<>();
+	private List<Congestion> largeCongestions = new ArrayList<>();
 
-	private CongestionClusters clusters = new CongestionClusters();
-	private List<Set<Place>> smallCongestions = new ArrayList<>();
-	private List<Set<Place>> largeCongestions = new ArrayList<>();
-
-	private Map<String, Place> placesMap = null;
-
-	public List<Set<Place>> getSmallCongestions() {
+	public List<Congestion> getSmallCongestions() {
 		return smallCongestions;
 	}
 
-	public List<Set<Place>> getLargeCongestions() {
+	public List<Congestion> getLargeCongestions() {
 		return largeCongestions;
 	}
 
 	public void generateCongestion() throws IOException {
-		placesMap = new PlacesGenerator().generatePlaces();
+		System.out.println(":: CongestionGenerator2 ::");
+		Map<String, Place> placesMap = new PlacesGenerator().generatePlaces();
 		List<Place> congestedPlaces = new ArrayList<Place>();
 
 		for (Entry<String, Place> entry : placesMap.entrySet()) {
@@ -38,18 +38,15 @@ public class CongestionGenerator {
 			}
 		}
 		groupCongestedPlaces(congestedPlaces);
-		List<Set<Place>> groups = clusters.getAllClusters();
-		CongestionClustersDao clustersDao = new CongestionClustersDao();
-		clustersDao.addAll(groups);
-		for (Set<Place> set : groups) {
-			if (set.size() == 1)
-				smallCongestions.add(set);
-			else
-				largeCongestions.add(set);
+		Map<CongestionType, List<Congestion>> types = manager.getAllClusters();
+		
+		CityCongestionsDao congestionsDao = new CityCongestionsDao();
+		congestionsDao.drop();
+		congestionsDao.addAll(types.get(CongestionManager.CongestionType.SMALL));
+		congestionsDao.addAll(types.get(CongestionManager.CongestionType.LARGE));
 
-		}
-		System.out.println("Small congestions :: " + smallCongestions.size());
-		System.out.println("large congestions :: " + largeCongestions.size());
+		System.out.println("Small congestions :: " + types.get(CongestionManager.CongestionType.SMALL).size());
+		System.out.println("large congestions :: " + types.get(CongestionManager.CongestionType.LARGE).size());
 	}
 
 	private void groupCongestedPlaces(List<Place> congestedPlaces) {
@@ -58,13 +55,14 @@ public class CongestionGenerator {
 		System.out.println("gropuing congested places...");
 
 		int ctr = 0;
+		StopWatch watch = new StopWatch();
 		for (Place srcPlace : congestedPlaces) {
 			if (ctr++ % 500 == 0) {
-				System.out.println("gropuing :: " + ctr + " of " + congestedPlaces.size());
+				System.out.println("gropuing :: " + ctr + " of " + congestedPlaces.size() + " :: " + watch.lap());
 			}
-			Set<Place> set = clusters.getGroup(srcPlace);
+			Congestion congestion = manager.getCongestion(srcPlace);
 			for (Place destPlace : congestedPlaces) {
-				clusters.addToGroup(set, destPlace);
+				manager.addToCongestion(congestion, destPlace);
 			}
 		}
 	}

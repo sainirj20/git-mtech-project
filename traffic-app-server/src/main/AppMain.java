@@ -9,6 +9,7 @@ public class AppMain {
 
 	public static void main(String[] args) throws IOException {
 		StopWatch stopWatch = new StopWatch();
+		// new CongestionGenerator().generateCongestion();
 		new CongestionGenerator().generateCongestion();
 		System.out.println(stopWatch.totalTime());
 	}

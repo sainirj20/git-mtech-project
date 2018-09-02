@@ -20,7 +20,7 @@
 <body>
 	<div id="map" style="width: 1200px; height: 600px;"></div>
 	<script type="text/javascript">
-	<%groups.initFormGenerator();%>
+	<%groups.init();%>
 	var smallCongestions = [
 		<%Iterator<Place> itr = groups.getSmallCongestions().iterator();
 		while (itr.hasNext()) {Place p = itr.next();%>
@@ -60,10 +60,10 @@
 		      marker = new google.maps.Circle({
 		    	  center: new google.maps.LatLng(smallCongestions[i][0], smallCongestions[i][1]),
 		    	  radius: 50,
-		    	  strokeColor: "#FF0000",
+		    	  strokeColor: "#FF3399",
 		    	  strokeOpacity: 0.8,
 		    	  strokeWeight: 2,
-		    	  fillColor: "#FF0000",
+		    	  fillColor: "#FF3399",
 		    	  fillOpacity: 0.4,
 		          map: map,
 		      });

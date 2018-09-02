@@ -1,10 +1,8 @@
 package com.traffic.dao;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.bson.Document;
 
@@ -12,24 +10,25 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.traffic.dao.mongo.MongoConstants;
+import com.traffic.model.Congestion;
 import com.traffic.model.Place;
 
-public class CongestionClustersDao implements MongoConstants {
-	private final String collectionName = "CongestionClusters";
+public class CityCongestionsDao implements MongoConstants {
+	private final String collectionName = "CityCongestions";
 	private final MongoDatabase instance;
 	private final MongoCollection<Document> collection;
 
 	private Map<String, Place> placesMap = null;
 
-	public CongestionClustersDao() {
+	public CityCongestionsDao() {
 		instance = DatabaseInstance.getInstance();
 		collection = instance.getCollection(collectionName);
 		placesMap = new PlacesDao().getAll();
 	}
 
-	public synchronized Document toDocument(Set<Place> set) {
+	public synchronized Document toDocument(Congestion congestion) {
 		List<String> placeIds = new ArrayList<>();
-		for (Place place : set) {
+		for (Place place : congestion) {
 			placeIds.add(place.getPlaceId());
 		}
 		Document document = new Document();
@@ -38,29 +37,32 @@ public class CongestionClustersDao implements MongoConstants {
 	}
 
 	@SuppressWarnings("unchecked")
-	public synchronized Set<Place> fromDocument(Document document) {
+	public synchronized Congestion fromDocument(Document document) {
 		List<String> placeIds = (List<String>) document.getOrDefault(details, new ArrayList<String>());
-		Set<Place> set = new HashSet<>();
+		Congestion congestion = new Congestion();
 		for (String placeId : placeIds) {
-			set.add(placesMap.get(placeId));
+			congestion.add(placesMap.get(placeId));
 		}
-		return set;
+		return congestion;
 	}
 
-	public void addAll(List<Set<Place>> congestionCluster) {
-//		collection.drop();
-//		for (Set<Place> set : congestionCluster) {
-//			Document d = toDocument(set);
-//			collection.insertOne(d);
-//		}
+	public void drop() {
+		collection.drop();
 	}
 
-	public List<Set<Place>> getAll() {
-		List<Set<Place>> list = new ArrayList<>();
+	public void addAll(List<Congestion> congestionList) {
+		for (Congestion congestion : congestionList) {
+			Document d = toDocument(congestion);
+			collection.insertOne(d);
+		}
+	}
+
+	public List<Congestion> getAll() {
+		List<Congestion> list = new ArrayList<>();
 		FindIterable<Document> documents = collection.find();
 		for (Document doc : documents) {
-			Set<Place> set = fromDocument(doc);
-			list.add(set);
+			Congestion congestion = fromDocument(doc);
+			list.add(congestion);
 		}
 		return list;
 	}
