@@ -8,7 +8,7 @@ public class StopWatch {
 		startTime = System.currentTimeMillis();
 		totalTime = 0;
 	}
-
+	
 	public void reset() {
 		startTime = System.currentTimeMillis();
 		totalTime = 0;
@@ -24,10 +24,11 @@ public class StopWatch {
 	}
 
 	public String totalTime() {
-		totalTime += (System.currentTimeMillis() - startTime) / 1000;
+		long stopTime = System.currentTimeMillis();
+		totalTime += (stopTime - startTime) / 1000;
 		long minutes = totalTime / 60;
 		long seconds = totalTime % 60;
-		long miliSeconds = totalTime % 1000;
+		long miliSeconds = stopTime % 1000;
 		startTime = System.currentTimeMillis();
 		return "[Total time taken :: " + minutes + " min " + seconds + " sec " + miliSeconds + " ms]";
 	}
