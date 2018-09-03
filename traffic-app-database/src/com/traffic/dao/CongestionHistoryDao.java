@@ -2,10 +2,7 @@ package com.traffic.dao;
 
 import static com.mongodb.client.model.Filters.eq;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +16,7 @@ import com.traffic.dao.mongo.CongestionHistoryMapper;
 import com.traffic.dao.mongo.Mapper;
 import com.traffic.dao.mongo.MongoConstants;
 import com.traffic.model.Place;
+import com.traffic.util.HistoryKeyMaker;
 
 public class CongestionHistoryDao implements MongoConstants {
 	private final String collectionName = "CongestionHistory";
@@ -30,50 +28,11 @@ public class CongestionHistoryDao implements MongoConstants {
 		collection = instance.getCollection(collectionName);
 	}
 
-	private class Key {
-		final String pattern = "yyyy-MMMMM-dd-E-HH-mm";
-		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		final Calendar today = Calendar.getInstance();
-
-		String getKey() {
-			int roundMin = today.get(Calendar.MINUTE) / 10;
-			today.set(Calendar.MINUTE, roundMin * 10);
-			String key = simpleDateFormat.format(today.getTime());
-			return key;
-		}
-
-		Map<Integer, String> getTodaysKeys() {
-			Map<Integer, String> keys = new HashMap<>();
-
-			Calendar cal = Calendar.getInstance();
-			int roundMin = cal.get(Calendar.MINUTE) / 10;
-			cal.set(Calendar.MINUTE, roundMin * 10);
-			int hour = cal.get(Calendar.HOUR_OF_DAY);
-			for (int i = 0; i < hour; i++) {
-				cal.set(Calendar.HOUR_OF_DAY, i);
-				keys.put(i, simpleDateFormat.format(cal.getTime()));
-			}
-			return keys;
-		}
-
-		Map<Integer, String> getLastWeeksKeys() {
-			Map<Integer, String> keys = new HashMap<>();
-			for (int i = 1; i < 7; i++) {
-				Calendar cal = Calendar.getInstance();
-				int roundMin = cal.get(Calendar.MINUTE) / 10;
-				cal.set(Calendar.MINUTE, roundMin * 10);
-				cal.add(Calendar.DATE, -i);
-				keys.put(i, simpleDateFormat.format(cal.getTime()));
-			}
-			return keys;
-		}
-	}
-
 	public void insertOrUpdate(List<Place> congestedPlaces) {
 		if (null == congestedPlaces || 0 == congestedPlaces.size()) {
 			return;
 		}
-		String key = new Key().getKey();
+		String key = new HistoryKeyMaker().getKey();
 		Mapper<List<Place>> mapper = new CongestionHistoryMapper(key);
 		Document doc = mapper.toDocument(congestedPlaces);
 		try {
@@ -83,27 +42,27 @@ public class CongestionHistoryDao implements MongoConstants {
 		}
 	}
 
-	public Map<Integer, List<Place>> getTodaysHistory() {
-		Map<Integer, String> todaysKeys = new Key().getTodaysKeys();
+	public List<List<Place>> getTodaysHistory() {
+		Map<String, String> todaysKeys = new HistoryKeyMaker().getTodaysKeys();
 		Mapper<List<Place>> mapper = new CongestionHistoryMapper("");
-		Map<Integer, List<Place>> history = new HashMap<>();
+		List<List<Place>> history = new LinkedList<>();
 		todaysKeys.forEach((hour, key) -> {
 			Document document = collection.find(eq(id, key)).first();
 			if (null != document) {
-				history.put(hour, mapper.fromDocument(document));
+				history.add(mapper.fromDocument(document));
 			}
 		});
 		return history;
 	}
 
-	public Map<Integer, List<Place>> getWeeksHistory() {
-		Map<Integer, String> weeksKeys = new Key().getLastWeeksKeys();
+	public List<List<Place>> getWeeksHistory() {
+		Map<Integer, String> weeksKeys = new HistoryKeyMaker().getLastWeeksKeys();
 		Mapper<List<Place>> mapper = new CongestionHistoryMapper("");
-		Map<Integer, List<Place>> history = new HashMap<>();
+		List<List<Place>> history = new LinkedList<>();
 		weeksKeys.forEach((day, key) -> {
 			Document document = collection.find(eq(id, key)).first();
 			if (null != document) {
-				history.put(day, mapper.fromDocument(document));
+				history.add(mapper.fromDocument(document));
 			}
 		});
 		return history;
