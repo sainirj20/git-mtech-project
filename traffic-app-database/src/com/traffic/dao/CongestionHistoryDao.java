@@ -21,51 +21,66 @@ import com.traffic.util.HistoryKeyMaker;
 public class CongestionHistoryDao implements MongoConstants {
 	private final String collectionName = "CongestionHistory";
 	private final MongoDatabase instance;
-	final MongoCollection<Document> collection;
+	private final MongoCollection<Document> collection;
+	private final Mapper<List<String>> mapper;
+
+	private final Map<String, Place> placesMap;
 
 	public CongestionHistoryDao() {
 		instance = DatabaseInstance.getInstance();
 		collection = instance.getCollection(collectionName);
+		mapper = new CongestionHistoryMapper();
+		placesMap = new PlacesDao().getAll();
 	}
 
 	public void insertOrUpdate(List<Place> congestedPlaces) {
 		if (null == congestedPlaces || 0 == congestedPlaces.size()) {
 			return;
 		}
-		String key = new HistoryKeyMaker().getKey();
-		Mapper<List<Place>> mapper = new CongestionHistoryMapper(key);
-		Document doc = mapper.toDocument(congestedPlaces);
+
+		List<String> placeIdList = new LinkedList<>();
+		for (Place place : congestedPlaces) {
+			placeIdList.add(place.getPlaceId());
+		}
+		Document doc = mapper.toDocument(placeIdList);
 		try {
 			collection.insertOne(doc);
 		} catch (MongoWriteException e) {
-			collection.updateOne(eq(id, key), Updates.set(details, doc.get(details)));
+			collection.updateOne(eq(id, doc.get(id)), Updates.set(details, doc.get(details)));
 		}
 	}
 
 	public List<List<Place>> getTodaysHistory() {
-		Map<String, String> todaysKeys = new HistoryKeyMaker().getTodaysKeys();
-		Mapper<List<Place>> mapper = new CongestionHistoryMapper("");
-		List<List<Place>> history = new LinkedList<>();
-		todaysKeys.forEach((hour, key) -> {
-			Document document = collection.find(eq(id, key)).first();
-			if (null != document) {
-				history.add(mapper.fromDocument(document));
-			}
-		});
-		return history;
+		List<String> todaysKeys = new HistoryKeyMaker().getTodaysKeys();
+		return getHistory(todaysKeys);
 	}
 
 	public List<List<Place>> getWeeksHistory() {
-		Map<Integer, String> weeksKeys = new HistoryKeyMaker().getLastWeeksKeys();
-		Mapper<List<Place>> mapper = new CongestionHistoryMapper("");
-		List<List<Place>> history = new LinkedList<>();
-		weeksKeys.forEach((day, key) -> {
-			Document document = collection.find(eq(id, key)).first();
-			if (null != document) {
-				history.add(mapper.fromDocument(document));
-			}
-		});
-		return history;
+		List<String> weeksKeys = new HistoryKeyMaker().getLastWeeksKeys();
+		return getHistory(weeksKeys);
 	}
 
+	private List<List<Place>> getHistory(List<String> keys) {
+		List<List<String>> placeIds = new LinkedList<>();
+		keys.forEach(key -> {
+			Document document = collection.find(eq(id, key)).first();
+			if (null != document) {
+				placeIds.add(mapper.fromDocument(document));
+			}
+		});
+
+		List<List<Place>> history = new LinkedList<>();
+		for (List<String> list : placeIds) {
+			List<Place> congestedPlaces = new LinkedList<>();
+			for (String placeId : list) {
+				congestedPlaces.add(placesMap.get(placeId));
+			}
+			history.add(congestedPlaces);
+		}
+		return history;
+	}
+	
+	public void drop() {
+		collection.drop();
+	}
 }

@@ -2,8 +2,8 @@ package com.traffic.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 public class HistoryKeyMaker {
 	private final String pattern = "yyyy-MMMMM-dd-E-HH-mm";
@@ -20,9 +20,9 @@ public class HistoryKeyMaker {
 		return key;
 	}
 
-	public Map<String, String> getTodaysKeys() {
-		Map<String, String> workingHours = new LinkedHashMap<>();
-		Map<String, String> nonWorkingHours = new LinkedHashMap<>();
+	public List<String> getTodaysKeys() {
+		List<String> workingHours = new LinkedList<>();
+		List<String> nonWorkingHours = new LinkedList<>();
 
 		Calendar cal = Calendar.getInstance();
 		int currentHour = cal.get(Calendar.HOUR_OF_DAY);
@@ -39,19 +39,18 @@ public class HistoryKeyMaker {
 				}
 
 				if (dayTime[0] <= hourOfDay && hourOfDay <= dayTime[1]) {
-					workingHours.put(hourOfDay + ":" + minute, simpleDateFormat.format(cal.getTime()));
+					workingHours.add(simpleDateFormat.format(cal.getTime()));
 				} else {
-					nonWorkingHours.put(hourOfDay + ":" + minute, simpleDateFormat.format(cal.getTime()));
+					nonWorkingHours.add(simpleDateFormat.format(cal.getTime()));
 				}
-
 			}
 		}
 		return (dayTime[0] <= currentHour && currentHour <= dayTime[1]) ? workingHours : nonWorkingHours;
 	}
 
-	public Map<Integer, String> getLastWeeksKeys() {
-		Map<Integer, String> weekends = new LinkedHashMap<>();
-		Map<Integer, String> weekdays = new LinkedHashMap<>();
+	public List<String> getLastWeeksKeys() {
+		List<String> weekends = new LinkedList<>();
+		List<String> weekdays = new LinkedList<>();
 		Calendar cal = Calendar.getInstance();
 		int currentDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 		int roundMin = cal.get(Calendar.MINUTE) / 10;
@@ -60,13 +59,11 @@ public class HistoryKeyMaker {
 			cal.add(Calendar.DATE, -1);
 			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 			if (dayOfWeek == weekend[0] || dayOfWeek == weekend[1]) {
-				weekends.put(dayOfWeek, simpleDateFormat.format(cal.getTime()));
+				weekends.add(simpleDateFormat.format(cal.getTime()));
 			} else {
-				weekdays.put(dayOfWeek, simpleDateFormat.format(cal.getTime()));
+				weekdays.add(simpleDateFormat.format(cal.getTime()));
 			}
-
 		}
 		return (currentDayOfWeek == weekend[0] || currentDayOfWeek == weekend[1]) ? weekends : weekdays;
 	}
-
 }
