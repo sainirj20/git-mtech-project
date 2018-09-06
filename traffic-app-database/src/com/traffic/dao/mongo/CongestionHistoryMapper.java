@@ -9,7 +9,7 @@ import org.bson.Document;
 import com.traffic.util.HistoryKeyMaker;
 
 public class CongestionHistoryMapper implements Mapper<List<String>> {
-
+	
 	@Override
 	public Document toDocument(List<String> list) {
 		Object historyKey = new HistoryKeyMaker().getKey();
@@ -23,6 +23,6 @@ public class CongestionHistoryMapper implements Mapper<List<String>> {
 	public List<String> fromDocument(Document document) {
 		List<String> history = new LinkedList<>();
 		history.addAll((Collection<? extends String>) document.getOrDefault(details, new LinkedList<>()));
-		return null;
+		return history;
 	}
 }

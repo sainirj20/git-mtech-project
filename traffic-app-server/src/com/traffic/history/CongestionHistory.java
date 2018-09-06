@@ -25,7 +25,10 @@ public class CongestionHistory {
 		todaysHistory = historyDao.getTodaysHistory();
 		weeksHistory = historyDao.getWeeksHistory();
 
-		init();
+		todaysHistory.forEach(item -> System.out.println("today :: " + item));
+		weeksHistory.forEach(item -> System.out.println("week ::" + item));
+
+		this.init();
 	}
 
 	private void init() {
@@ -52,9 +55,7 @@ public class CongestionHistory {
 	public void checkUnunsualCongestion(Congestion congestion) {
 		congestion.forEach(congestedPlace -> {
 			congestion.setDuration(congestedPlacesAndDuration.get(congestedPlace.getPlaceId()));
-			if (isNewCongestedPlacesMap.get(congestedPlace.getPlaceId())) {
-				congestion.setTypeUnusual();
-			}
+			congestion.setTypeUnusual(isNewCongestedPlacesMap.get(congestedPlace.getPlaceId()));
 		});
 	}
 
