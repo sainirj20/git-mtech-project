@@ -3,13 +3,10 @@ package com.traffic.dao;
 import static com.mongodb.client.model.Filters.eq;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
 
-import com.mongodb.MongoBulkWriteException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -30,18 +27,6 @@ public class PlacesDao implements MongoConstants {
 		instance = DatabaseInstance.getInstance();
 		collection = instance.getCollection(collectionName);
 		mapper = new PlacesMapper();
-	}
-
-	public void insertAll(Map<String, Place> placesMap) {
-		List<Document> docs = new LinkedList<>();
-		for (Map.Entry<String, Place> entry : placesMap.entrySet()) {
-			docs.add(mapper.toDocument(entry.getValue()));
-		}
-		try {
-			collection.insertMany(docs);
-		} catch (MongoBulkWriteException e) {
-			System.out.println(e);
-		}
 	}
 
 	public void addOrUpdate(Place place) {

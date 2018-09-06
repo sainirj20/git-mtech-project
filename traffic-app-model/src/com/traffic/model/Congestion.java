@@ -5,6 +5,8 @@ import java.util.HashSet;
 public final class Congestion extends HashSet<Place> {
 	private static final long serialVersionUID = -4037137473313165293L;
 
+	private int duration = 0; // in mins
+
 	public enum CongestionType {
 		SMALL, LARGE, UNUSUAL
 	};
@@ -23,11 +25,22 @@ public final class Congestion extends HashSet<Place> {
 		return type;
 	}
 
+	public void setTypeUnusual() {
+		type = CongestionType.UNUSUAL;
+	}
+
+	public void setDuration(int duration) {
+		if (this.duration < duration) {
+			this.duration = duration;
+		}
+	}
+
 	public CongestionType getType() {
 		return type;
 	}
 
-	public void setTypeUnusual() {
-		type = CongestionType.UNUSUAL;
+	public int getDuration() {
+		return duration;
 	}
+
 }

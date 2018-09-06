@@ -12,5 +12,4 @@ public class AppMain {
 		new CityCongestions().generateCongestion();
 		System.out.println(stopWatch.totalTime());
 	}
-
 }

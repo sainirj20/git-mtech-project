@@ -9,21 +9,40 @@ import java.util.Map;
 
 import com.traffic.dao.CityCongestionsDao;
 import com.traffic.dao.CongestionHistoryDao;
+import com.traffic.history.CongestionHistory;
 import com.traffic.model.Congestion;
 import com.traffic.model.Place;
 import com.traffic.places.PlacesGenerator;
 
 public class CityCongestions {
-	private final Map<String, Congestion> allCityCongestions = new HashMap<>();
+	private final List<Place> congestedPlaces;
+	private final Map<String, Congestion> allCityCongestions;
+	private final CongestionHistory congestionHistory;
+
+	public CityCongestions() throws IOException {
+		allCityCongestions = new HashMap<>();
+		congestedPlaces = getCongestedPlaces();
+		congestionHistory = new CongestionHistory(congestedPlaces);
+	}
+
+	private List<Place> getCongestedPlaces() throws IOException {
+		Map<String, Place> placesMap = new PlacesGenerator().generatePlaces();
+
+		// get congested places
+		List<Place> congestedPlaces = new ArrayList<Place>();
+		placesMap.forEach((placeId, place) -> {
+			if (place.isPlaceCongested() && place.hasLocationDetails()) {
+				congestedPlaces.add(place);
+			}
+		});
+		return congestedPlaces;
+	}
 
 	public void generateCongestion() throws IOException {
 		System.out.println(":: CityCongestions ::");
-		
-		// get congested places
-		List<Place> congestedPlaces = getCongestedPlaces();
-		
-		//save congested places to Congestion History
-		CongestionHistoryDao congestionHistoryDao= new CongestionHistoryDao();
+
+		// save congested places to Congestion History
+		CongestionHistoryDao congestionHistoryDao = new CongestionHistoryDao();
 		congestionHistoryDao.insertOrUpdate(congestedPlaces);
 
 		// group them into small and large congestion(s)
@@ -39,19 +58,6 @@ public class CityCongestions {
 		congestionsDao.drop();
 		congestionsDao.addAll(new LinkedList<Congestion>(allCityCongestions.values()));
 	}
-	
-	private List<Place> getCongestedPlaces() throws IOException {
-		Map<String, Place> placesMap = new PlacesGenerator().generatePlaces();
-
-		// get congested places
-		List<Place> congestedPlaces = new ArrayList<Place>();
-		placesMap.forEach((placeId, place) -> {
-			if (place.isPlaceCongested() && place.hasLocationDetails()) {
-				congestedPlaces.add(place);
-			}
-		});
-		return congestedPlaces;
-	}
 
 	private void setCongestionType() {
 		int small = 0, large = 0;
@@ -62,6 +68,7 @@ public class CityCongestions {
 			} else {
 				large++;
 			}
+			congestionHistory.checkUnunsualCongestion(congestion);
 		}
 		System.out.println("Small congestions :: " + small);
 		System.out.println("large congestions :: " + large);

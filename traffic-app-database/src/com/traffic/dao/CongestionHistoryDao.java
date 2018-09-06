@@ -2,9 +2,9 @@ package com.traffic.dao;
 
 import static com.mongodb.client.model.Filters.eq;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.bson.Document;
 
@@ -24,13 +24,10 @@ public class CongestionHistoryDao implements MongoConstants {
 	private final MongoCollection<Document> collection;
 	private final Mapper<List<String>> mapper;
 
-	private final Map<String, Place> placesMap;
-
 	public CongestionHistoryDao() {
 		instance = DatabaseInstance.getInstance();
 		collection = instance.getCollection(collectionName);
 		mapper = new CongestionHistoryMapper();
-		placesMap = new PlacesDao().getAll();
 	}
 
 	public void insertOrUpdate(List<Place> congestedPlaces) {
@@ -50,36 +47,29 @@ public class CongestionHistoryDao implements MongoConstants {
 		}
 	}
 
-	public List<List<Place>> getTodaysHistory() {
+	public List<List<String>> getTodaysHistory() {
 		List<String> todaysKeys = new HistoryKeyMaker().getTodaysKeys();
 		return getHistory(todaysKeys);
 	}
 
-	public List<List<Place>> getWeeksHistory() {
+	public List<List<String>> getWeeksHistory() {
 		List<String> weeksKeys = new HistoryKeyMaker().getLastWeeksKeys();
 		return getHistory(weeksKeys);
 	}
 
-	private List<List<Place>> getHistory(List<String> keys) {
-		List<List<String>> placeIds = new LinkedList<>();
+	private List<List<String>> getHistory(List<String> keys) {
+		List<List<String>> history = new LinkedList<>();
 		keys.forEach(key -> {
 			Document document = collection.find(eq(id, key)).first();
-			if (null != document) {
-				placeIds.add(mapper.fromDocument(document));
+			if (null == document) {
+				history.add(new ArrayList<>());
+			} else {
+				history.add(mapper.fromDocument(document));
 			}
 		});
-
-		List<List<Place>> history = new LinkedList<>();
-		for (List<String> list : placeIds) {
-			List<Place> congestedPlaces = new LinkedList<>();
-			for (String placeId : list) {
-				congestedPlaces.add(placesMap.get(placeId));
-			}
-			history.add(congestedPlaces);
-		}
 		return history;
 	}
-	
+
 	public void drop() {
 		collection.drop();
 	}

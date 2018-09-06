@@ -9,13 +9,14 @@ public class HistoryKeyMaker {
 	private final String pattern = "yyyy-MMMMM-dd-E-HH-mm";
 	private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
-	private final int dayTime[] = { 6, 21 }; // 6am-10pm
-	private final int weekend[] = { 1, 7 }; // Sunday=1 and Saturday=7
+	private final int roundTo = 10;	
+	private final int dayTime[] = { 6, 21 };	// 6am-10pm
+	private final int weekend[] = { 1, 7 };		// Sunday=1 and Saturday=7
 
 	public String getKey() {
 		Calendar today = Calendar.getInstance();
-		int roundMin = today.get(Calendar.MINUTE) / 10;
-		today.set(Calendar.MINUTE, roundMin * 10);
+		int roundMin = today.get(Calendar.MINUTE) / roundTo;
+		today.set(Calendar.MINUTE, roundMin * roundTo);
 		String key = simpleDateFormat.format(today.getTime());
 		return key;
 	}
@@ -28,7 +29,7 @@ public class HistoryKeyMaker {
 		int currentHour = cal.get(Calendar.HOUR_OF_DAY);
 		int currentMin = cal.get(Calendar.MINUTE);
 		for (int i = 0; i <= currentHour; i++) {
-			for (int j = 0; j < 60; j += 10) {
+			for (int j = 0; j < 60; j += roundTo) {
 				cal.set(Calendar.MINUTE, j);
 				cal.set(Calendar.HOUR_OF_DAY, i);
 				int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
@@ -53,8 +54,8 @@ public class HistoryKeyMaker {
 		List<String> weekdays = new LinkedList<>();
 		Calendar cal = Calendar.getInstance();
 		int currentDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-		int roundMin = cal.get(Calendar.MINUTE) / 10;
-		cal.set(Calendar.MINUTE, roundMin * 10);
+		int roundMin = cal.get(Calendar.MINUTE) / roundTo;
+		cal.set(Calendar.MINUTE, roundMin * roundTo);
 		for (int i = 0; i < 7; i++) {
 			cal.add(Calendar.DATE, -1);
 			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);

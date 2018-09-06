@@ -59,7 +59,7 @@
 	    for (i = 0; i < smallCongestions.length; i++) {
 		      marker = new google.maps.Circle({
 		    	  center: new google.maps.LatLng(smallCongestions[i][0], smallCongestions[i][1]),
-		    	  radius: 50,
+		    	  radius: 30,
 		    	  strokeColor: "#FF3399",
 		    	  strokeOpacity: 0.8,
 		    	  strokeWeight: 2,
