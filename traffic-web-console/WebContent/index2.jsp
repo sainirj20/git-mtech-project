@@ -34,6 +34,13 @@
 			[<%=p.getLat()%>, <%=p.getLng()%> ],
 		<%}%>
 	    ];
+	
+	var unUnsualCongestions = [
+		<%Iterator<Place> itr3 = groups.getUnUnsualCongestions().iterator(); 
+		while (itr3.hasNext()) {Place p = itr3.next();%>
+			[<%=p.getLat()%>, <%=p.getLng()%> ],
+		<%}%>
+	    ];
 
 	var map = new google.maps.Map(document.getElementById('map'), {
 	      zoom: 12,
@@ -64,6 +71,19 @@
 		    	  strokeOpacity: 0.8,
 		    	  strokeWeight: 2,
 		    	  fillColor: "#FF3399",
+		    	  fillOpacity: 0.4,
+		          map: map,
+		      });
+		    }
+	    
+	    for (i = 0; i < unUnsualCongestions.length; i++) {
+		      marker = new google.maps.Circle({
+		    	  center: new google.maps.LatLng(unUnsualCongestions[i][0], unUnsualCongestions[i][1]),
+		    	  radius: 60,
+		    	  strokeColor: "#FF0000",
+		    	  strokeOpacity: 0.8,
+		    	  strokeWeight: 2,
+		    	  fillColor: "#FF0000",
 		    	  fillOpacity: 0.4,
 		          map: map,
 		      });

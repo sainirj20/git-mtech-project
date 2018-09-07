@@ -1,8 +1,6 @@
 package com.traffic.map;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -13,42 +11,34 @@ import com.traffic.model.Place;
 public class Groups {
 	private CityCongestionsDao clustersDao = new CityCongestionsDao();
 
-	private List<Set<Place>> smallCongestions = new ArrayList<>();
-	private List<Set<Place>> largeCongestions = new ArrayList<>();
+	private Set<Place> smallCongestions = new HashSet<>();
+	private Set<Place> largeCongestions = new HashSet<>();
+	private Set<Place> unUnsualCongestions = new HashSet<>();
 
 	public void init() {
 		List<Congestion> groups = clustersDao.getAll();
-		for (Set<Place> set : groups) {
-			if (set.size() == 1)
-				smallCongestions.add(set);
+		for (Congestion congestion : groups) {
+			if (congestion.getType() == Congestion.CongestionType.SMALL.getValue())
+				smallCongestions.addAll(congestion);
+			else if (congestion.getType() == Congestion.CongestionType.LARGE.getValue())
+				largeCongestions.addAll(congestion);
 			else
-				largeCongestions.add(set);
+				unUnsualCongestions.addAll(congestion);
 		}
 	}
 
-	public List<Place> getSmallCongestions() {
-		List<Place> list = new LinkedList<>();
-		for (Set<Place> set : smallCongestions) {
-			for (Place place : set) {
-				list.add(place);
-			}
-		}
-		System.out.println("small Congestions list :: " + list.size());
-		return list;
+	public Set<Place> getSmallCongestions() {
+		System.out.println("small Congestions list :: " + smallCongestions.size());
+		return smallCongestions;
 	}
 
-	public List<Place> getLargeCongestions() {
-		Set<Place> list = new HashSet<>();
-		int index = 0;
-		for (Set<Place> set : largeCongestions) {
-			index = 0;
-			for (Place place : set) {
-				if (index++ % 3 == 0)
-					list.add(place);
+	public Set<Place> getLargeCongestions() {
+		System.out.println("large Congestions list :: " + largeCongestions.size());
+		return largeCongestions;
+	}
 
-			}
-		}
-		System.out.println("large Congestions list :: " + list.size());
-		return new LinkedList<>(list);
+	public Set<Place> getUnUnsualCongestions() {
+		System.out.println("Un-unsual Congestions list :: " + unUnsualCongestions.size());
+		return unUnsualCongestions;
 	}
 }

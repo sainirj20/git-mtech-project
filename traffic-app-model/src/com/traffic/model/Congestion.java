@@ -4,23 +4,17 @@ import java.util.HashSet;
 
 public final class Congestion extends HashSet<Place> {
 	public enum CongestionType {
-		SMALL("SMALL"), LARGE("LARGE"), UNUSUAL("UNUSUAL");
+		SMALL(0), LARGE(1), UNUSUAL(2);
+		private final int value;
 
-		private final String text;
-
-		CongestionType(final String text) {
-			this.text = text;
+		private CongestionType(Integer value) {
+			this.value = value;
 		}
 
-		@Override
-		public String toString() {
-			return text;
+		public Integer getValue() {
+			return value;
 		}
 	}
-
-//	public enum CongestionType {
-//		SMALL, LARGE, UNUSUAL;
-//	};
 
 	private static final long serialVersionUID = -4037137473313165293L;
 	private int duration = 0; // in mins
@@ -43,7 +37,7 @@ public final class Congestion extends HashSet<Place> {
 	}
 
 	public void setTypeUnusual(boolean isUnsual) {
-		if (isUnsual) {
+		if (isUnsual && CongestionType.SMALL != type) {
 			type = CongestionType.UNUSUAL;
 		}
 	}
@@ -54,12 +48,8 @@ public final class Congestion extends HashSet<Place> {
 		}
 	}
 
-	public CongestionType getType() {
-		return type;
-	}
-
-	public int getTypeInInteger() {
-		return type.ordinal();
+	public Integer getType() {
+		return type.getValue();
 	}
 
 	public int getDuration() {
