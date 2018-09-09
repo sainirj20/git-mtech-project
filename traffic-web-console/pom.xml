@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>traffic-web-console</groupId>
 	<artifactId>traffic-web-console</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
+	<name>Traffic updates</name>
 	<description>traffic app web console</description>
 
 	<dependencies>
@@ -52,4 +52,10 @@
 			</plugin>
 		</plugins>
 	</build>
+	<parent>
+		<groupId>com.bits.traffic</groupId>
+		<artifactId>build-all</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../build-all/pom.xml</relativePath>
+	</parent>
 </project>

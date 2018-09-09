@@ -20,9 +20,13 @@ public class Groups {
 		for (Congestion congestion : groups) {
 			if (congestion.getType() == Congestion.CongestionType.SMALL.getValue())
 				smallCongestions.addAll(congestion);
-			else if (congestion.getType() == Congestion.CongestionType.LARGE.getValue())
-				largeCongestions.addAll(congestion);
-			else
+			else if (congestion.getType() == Congestion.CongestionType.LARGE.getValue()) {
+				int ctr = 0;
+				for (Place place : congestion) {
+					if (ctr % 3 == 0)
+						largeCongestions.add(place);
+				}
+			} else
 				unUnsualCongestions.addAll(congestion);
 		}
 	}

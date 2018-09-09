@@ -2,9 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.bits.traffic</groupId>
 	<artifactId>traffic-app-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>traffic-app-server</name>
 	<description>cron server for traffic app</description>
 
@@ -58,11 +56,14 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2-beta-5</version>
 				<configuration>
+			        <jarName>traffic-app-server</jarName>
+			        <outputDirectory>../target</outputDirectory>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<archive>
 						<manifest>
+							<addClasspath>true</addClasspath>
 							<mainClass>main.AppMain</mainClass>
 						</manifest>
 					</archive>
@@ -78,4 +79,11 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<parent>
+		<groupId>com.bits.traffic</groupId>
+		<artifactId>build-all</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../build-all/pom.xml</relativePath>
+	</parent>
 </project>

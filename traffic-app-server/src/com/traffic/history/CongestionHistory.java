@@ -24,10 +24,6 @@ public class CongestionHistory {
 		CongestionHistoryDao historyDao = new CongestionHistoryDao();
 		todaysHistory = historyDao.getTodaysHistory();
 		weeksHistory = historyDao.getWeeksHistory();
-
-		todaysHistory.forEach(item -> System.out.println("today :: " + item));
-		weeksHistory.forEach(item -> System.out.println("week ::" + item));
-
 		this.init();
 	}
 
@@ -35,13 +31,16 @@ public class CongestionHistory {
 		for (String placeId : congestedPlacesAndDuration.keySet()) {
 			int duration = 0;
 			for (List<String> hour : todaysHistory) {
+				if (0 == hour.size()) {
+					continue;
+				}
 				duration += hour.contains(placeId) ? 10 : -10;
 				duration = (duration < 0) ? 0 : duration;
 			}
 			congestedPlacesAndDuration.put(placeId, duration);
 			boolean isNew = true;
 			for (List<String> day : weeksHistory) {
-				if (day.contains(placeId)) {
+				if (0 == day.size() || day.contains(placeId)) {
 					isNew = false;
 					break;
 				}
