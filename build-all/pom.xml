@@ -13,6 +13,5 @@
 		<module>../traffic-app-model</module>
 		<module>../traffic-app-server</module>
 		<module>../traffic-web-console</module>
-		<module>../traffic-app-services</module>
 	</modules>
 </project>
