@@ -1,4 +1,4 @@
-package com.traffic.dao.mongo;
+package com.traffic.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.bson.Document;
 
 import com.traffic.model.Congestion;
 import com.traffic.model.Place;
+import com.traffic.mongo.Mapper;
 
 public class CityCongestionsMapper implements Mapper<Congestion> {
 	private final String placeIdList = "placeIdList";

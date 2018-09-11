@@ -1,4 +1,4 @@
-package com.traffic.dao.mongo;
+package com.traffic.mongo;
 
 import org.bson.Document;
 

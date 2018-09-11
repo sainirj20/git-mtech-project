@@ -9,11 +9,11 @@ import org.bson.Document;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.traffic.dao.mongo.CityCongestionsMapper;
-import com.traffic.dao.mongo.Mapper;
-import com.traffic.dao.mongo.MongoConstants;
+import com.traffic.mapper.CityCongestionsMapper;
 import com.traffic.model.Congestion;
 import com.traffic.model.Place;
+import com.traffic.mongo.Mapper;
+import com.traffic.mongo.MongoConstants;
 
 public class CityCongestionsDao implements MongoConstants {
 	private final String collectionName = "CityCongestions";

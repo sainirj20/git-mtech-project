@@ -24,5 +24,4 @@ final public class DatabaseInstance {
 		}
 		return DATABASE;
 	}
-
 }

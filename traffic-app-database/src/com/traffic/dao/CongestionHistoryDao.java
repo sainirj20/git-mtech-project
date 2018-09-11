@@ -12,10 +12,10 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Updates;
-import com.traffic.dao.mongo.CongestionHistoryMapper;
-import com.traffic.dao.mongo.Mapper;
-import com.traffic.dao.mongo.MongoConstants;
+import com.traffic.mapper.CongestionHistoryMapper;
 import com.traffic.model.Place;
+import com.traffic.mongo.Mapper;
+import com.traffic.mongo.MongoConstants;
 import com.traffic.util.HistoryKeyMaker;
 
 public class CongestionHistoryDao implements MongoConstants {

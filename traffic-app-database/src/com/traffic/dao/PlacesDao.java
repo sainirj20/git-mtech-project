@@ -12,10 +12,10 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Updates;
-import com.traffic.dao.mongo.Mapper;
-import com.traffic.dao.mongo.MongoConstants;
-import com.traffic.dao.mongo.PlacesMapper;
+import com.traffic.mapper.PlacesMapper;
 import com.traffic.model.Place;
+import com.traffic.mongo.Mapper;
+import com.traffic.mongo.MongoConstants;
 
 public class PlacesDao implements MongoConstants {
 	private final String collectionName = "Places";

@@ -1,4 +1,4 @@
-package com.traffic.dao.mongo;
+package com.traffic.mapper;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bson.Document;
 
+import com.traffic.mongo.Mapper;
 import com.traffic.util.HistoryKeyMaker;
 
 public class CongestionHistoryMapper implements Mapper<List<String>> {

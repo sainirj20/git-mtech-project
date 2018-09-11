@@ -1,4 +1,4 @@
-package com.traffic.dao.mongo;
+package com.traffic.mapper;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -7,6 +7,7 @@ import java.util.List;
 import org.bson.Document;
 
 import com.traffic.model.PlaceIdNode;
+import com.traffic.mongo.Mapper;
 
 public class PlacesGraphMapper implements Mapper<PlaceIdNode> {
 	private final String placeId = "placeId";
