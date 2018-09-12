@@ -1,5 +1,7 @@
 package com.traffic.dao;
 
+import java.io.IOException;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoDatabase;
@@ -17,6 +19,12 @@ final public class DatabaseInstance {
 	}
 
 	public static MongoDatabase getInstance() {
+		try {
+			String current = new java.io.File(".").getCanonicalPath();
+			System.out.println("Current dir:" + current);
+			System.exit(0);
+		} catch (IOException e) {
+		}
 		if (DATABASE == null) {
 			synchronized (mutex) {
 				new DatabaseInstance();

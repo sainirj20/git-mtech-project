@@ -7,7 +7,7 @@ import java.util.List;
 import org.bson.Document;
 
 import com.traffic.mongo.Mapper;
-import com.traffic.util.HistoryKeyMaker;
+import com.traffic.utils.HistoryKeyMaker;
 
 public class CongestionHistoryMapper implements Mapper<List<String>> {
 	

@@ -6,34 +6,24 @@
 		<groupId>com.bits.traffic</groupId>
 		<artifactId>build-all</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../build-all/pom.xml</relativePath>
 	</parent>
-
-	<artifactId>traffic-web-console</artifactId>
-	<packaging>war</packaging>
-	<name>traffic-web-console</name>
-	<description>traffic app web console</description>
+	<artifactId>traffic-app-utils</artifactId>
+	<name>traffic-app-utils</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-			<version>9.0.0.M1</version>
-			<scope>provided</scope>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.6.3</version>
 		</dependency>
 		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.3</version>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.bits.traffic</groupId>
 			<artifactId>traffic-app-model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.bits.traffic</groupId>
-			<artifactId>traffic-app-database</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
@@ -42,6 +32,11 @@
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+			</plugin>
+			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.7.0</version>
 				<configuration>
@@ -49,16 +44,8 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>3.2.1</version>
-				<configuration>
-					<warSourceDirectory>WebContent</warSourceDirectory>
-					<warName>traffic-web-console</warName>
-					<outputDirectory>../target</outputDirectory>
-				</configuration>
-			</plugin>
-
 		</plugins>
 	</build>
+
+	<description>common utils for this app</description>
 </project>

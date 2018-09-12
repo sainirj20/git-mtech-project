@@ -1,4 +1,4 @@
-package com.traffic.util;
+package com.traffic.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

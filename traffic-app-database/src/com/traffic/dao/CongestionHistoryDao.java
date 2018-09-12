@@ -16,7 +16,7 @@ import com.traffic.mapper.CongestionHistoryMapper;
 import com.traffic.model.Place;
 import com.traffic.mongo.Mapper;
 import com.traffic.mongo.MongoConstants;
-import com.traffic.util.HistoryKeyMaker;
+import com.traffic.utils.HistoryKeyMaker;
 
 public class CongestionHistoryDao implements MongoConstants {
 	private final String collectionName = "CongestionHistory";
