@@ -23,6 +23,7 @@
 hs_err_pid*
 
 # custom project specific
+build-all/target/
 traffic-app-database/target/
 traffic-app-database/bin/
 traffic-app-mode/target/

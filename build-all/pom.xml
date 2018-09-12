@@ -9,10 +9,10 @@
 	<name>build all</name>
 	<description>build app project</description>
 	<modules>
-		<module>../traffic-app-database</module>
 		<module>../traffic-app-model</module>
+		<module>../traffic-app-utils</module>
+		<module>../traffic-app-database</module>
 		<module>../traffic-app-server</module>
 		<module>../traffic-web-console</module>
-		<module>../traffic-app-utils</module>
 	</modules>
 </project>

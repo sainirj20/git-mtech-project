@@ -55,7 +55,7 @@
 				<configuration>
 					<warSourceDirectory>WebContent</warSourceDirectory>
 					<warName>traffic-web-console</warName>
-					<outputDirectory>../target</outputDirectory>
+					<outputDirectory>../build-all/target</outputDirectory>
 				</configuration>
 			</plugin>
 

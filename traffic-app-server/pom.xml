@@ -54,7 +54,7 @@
 				<version>2.2-beta-5</version>
 				<configuration>
 					<jarName>traffic-app-server</jarName>
-					<outputDirectory>../target</outputDirectory>
+					<outputDirectory>../build-all/target</outputDirectory>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
