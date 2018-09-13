@@ -7,15 +7,28 @@ import com.traffic.utils.PropertiesUtil;
 
 final public class DatabaseInstance {
 	private static Object mutex = new Object();
-
-	private static final MongoClient mongo = new MongoClient("localhost", 27017);
 	private static MongoDatabase DATABASE;
 
+	private final MongoClient mongo;
+	
+	private final String host;
+	private final Integer port;
+	private final String userName;
+	private final String dbName;
+	private final String password;
+
 	private DatabaseInstance() {
-		System.out.println(PropertiesUtil.getPropertyValue("test"));
-		MongoCredential.createCredential("sampleUser", "myDb", "password".toCharArray());
+		host = PropertiesUtil.getPropertyValue("host");
+		port = Integer.parseInt(PropertiesUtil.getPropertyValue("port"));
+		userName = PropertiesUtil.getPropertyValue("userName");
+		dbName = PropertiesUtil.getPropertyValue("dbName");
+		password = PropertiesUtil.getPropertyValue("password");
+		
+		mongo = new MongoClient(host, port);
+		
+		MongoCredential.createCredential(userName, dbName, password.toCharArray());
 		System.out.println("Connected to the database successfully");
-		DATABASE = mongo.getDatabase("myDb");
+		DATABASE = mongo.getDatabase(dbName);
 	}
 
 	public static MongoDatabase getInstance() {

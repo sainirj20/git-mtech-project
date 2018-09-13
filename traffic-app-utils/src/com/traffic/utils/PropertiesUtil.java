@@ -11,7 +11,7 @@ public class PropertiesUtil {
 	static {
 		try {
 			prop.load(new FileInputStream("config.properties"));
-			System.out.println("properties loaded");
+			System.out.println(":: properties loaded ::");
 		} catch (IOException ex) {
 			try {
 				System.out.println("config.properties file to this location :: " + new File(".").getCanonicalPath());
