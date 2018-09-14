@@ -16,7 +16,6 @@ class CityCongestionsHelper {
 	}
 
 	void groupCongestedPlaces(List<Place> congestedPlaces) {
-		System.out.println("congested Places found :: " + congestedPlaces.size());
 		System.out.println("gropuing congested places...");
 
 		int ctr = 0;

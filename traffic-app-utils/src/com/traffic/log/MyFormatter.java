@@ -10,7 +10,10 @@ class MyFormatter extends Formatter {
 	public String format(LogRecord record) {
 		if (record.getLevel().equals(Level.INFO)) {
 			return record.getMessage() + "\n";
+		}else if (record.getLevel().equals(Level.SEVERE)) {
+			return record.getThrown() + "\n";
 		}
+		
 		return "[" + new Date(record.getMillis()) + "] " + record.getLevel() + " " + record.getSourceClassName() + " "
 				+ record.getSourceMethodName() + " :: " + record.getMessage() + "\n";
 	}

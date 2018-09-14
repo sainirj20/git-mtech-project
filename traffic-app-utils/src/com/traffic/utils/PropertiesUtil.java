@@ -9,9 +9,15 @@ public class PropertiesUtil {
 	private static Properties prop = new Properties();
 
 	static {
+		reloadProperties();
+	}
+
+	private PropertiesUtil() {
+	}
+
+	public static void reloadProperties() {
 		try {
 			prop.load(new FileInputStream("config.properties"));
-			System.out.println(":: properties loaded ::");
 		} catch (IOException ex) {
 			try {
 				System.out.println("config.properties file to this location :: " + new File(".").getCanonicalPath());
@@ -20,9 +26,6 @@ public class PropertiesUtil {
 			}
 			System.exit(0);
 		}
-	}
-
-	private PropertiesUtil() {
 	}
 
 	public static String getPropertyValue(String key) {

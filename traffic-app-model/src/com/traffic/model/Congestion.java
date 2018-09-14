@@ -36,13 +36,20 @@ public final class Congestion extends HashSet<Place> {
 		return type;
 	}
 
-	public void setTypeUnusual(boolean isUnsual) {
+	public boolean setTypeUnusual(Boolean isUnsual) {
+		if (null == isUnsual) {
+			return false;
+		}
 		if (isUnsual && CongestionType.SMALL != type) {
 			type = CongestionType.UNUSUAL;
 		}
+		return type == CongestionType.UNUSUAL;
 	}
 
-	public void setDuration(int duration) {
+	public void setDuration(Integer duration) {
+		if (null == duration) {
+			return;
+		}
 		if (this.duration < duration) {
 			this.duration = duration;
 		}

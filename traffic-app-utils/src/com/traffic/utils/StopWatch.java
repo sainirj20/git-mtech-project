@@ -1,35 +1,39 @@
 package com.traffic.utils;
 
+import java.util.Date;
+
 public class StopWatch {
 	private long startTime = System.currentTimeMillis();
-	private long totalTime = 0;
 
 	public StopWatch() {
 		startTime = System.currentTimeMillis();
-		totalTime = 0;
 	}
-	
-	public void reset() {
+
+	public String reset() {
 		startTime = System.currentTimeMillis();
-		totalTime = 0;
+		return "[job started at " + new Date(startTime) + "]";
 	}
 
 	public String lap() {
-		long endTimeInSeconds = (System.currentTimeMillis() - startTime) / 1000;
-		totalTime += endTimeInSeconds;
+		long lapTime = System.currentTimeMillis();
+		String result = "[That took :: " + getFormatedTime(lapTime) + "]";
+		startTime = System.currentTimeMillis();
+		return result;
+	}
+	
+	private String getFormatedTime(long stopTime) {
+		long endTimeInSeconds = (stopTime - startTime) / 1000;
 		long minutes = endTimeInSeconds / 60;
 		long seconds = endTimeInSeconds % 60;
-		startTime = System.currentTimeMillis();
-		return "[That took :: " + minutes + " minutes " + seconds + " seconds]";
-	}
-
-	public String totalTime() {
-		long stopTime = System.currentTimeMillis();
-		totalTime += (stopTime - startTime) / 1000;
-		long minutes = totalTime / 60;
-		long seconds = totalTime % 60;
 		long miliSeconds = stopTime % 1000;
-		startTime = System.currentTimeMillis();
-		return "[Total time taken :: " + minutes + " min " + seconds + " sec " + miliSeconds + " ms]";
+		StringBuilder sb = new StringBuilder();
+		if (minutes > 0) {
+			sb.append(minutes + " min " + seconds + " sec " + miliSeconds + " ms");
+		} else if (seconds > 0) {
+			sb.append(seconds + " sec " + miliSeconds + " ms");
+		} else {
+			sb.append(miliSeconds + " ms");
+		}
+		return sb.toString();
 	}
 }

@@ -51,11 +51,12 @@ public class CongestionHistory {
 		}
 	}
 
-	public void checkUnunsualCongestion(Congestion congestion) {
+	public boolean isUnunsualCongestion(Congestion congestion) {
 		congestion.forEach(congestedPlace -> {
 			congestion.setDuration(congestedPlacesAndDuration.get(congestedPlace.getPlaceId()));
 			congestion.setTypeUnusual(isNewCongestedPlacesMap.get(congestedPlace.getPlaceId()));
 		});
+		return congestion.getType() == Congestion.CongestionType.UNUSUAL.getValue();
 	}
 
 }

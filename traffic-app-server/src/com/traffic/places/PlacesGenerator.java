@@ -17,15 +17,11 @@ import com.traffic.utils.URLBuilder;
 
 public class PlacesGenerator {
 	private final PlacesDao placesDao = new PlacesDao();
-	private final Map<String, Place> placesMap;
+	private Map<String, Place> placesMap;
 
 	private final int threadPoolSize = 50;
 	private ExecutorService executorService = null;
 	private final List<Callable<Place>> callables = new ArrayList<Callable<Place>>();
-
-	public PlacesGenerator() {
-		placesMap = placesDao.getAll();
-	}
 
 	@SuppressWarnings("unchecked")
 	private void fetchFreeflowSpeed() throws IOException {
@@ -107,6 +103,7 @@ public class PlacesGenerator {
 
 	public Map<String, Place> generatePlaces() throws IOException {
 		StopWatch stopWatch = new StopWatch();
+		placesMap = placesDao.getAll();
 		executorService = Executors.newFixedThreadPool(threadPoolSize);
 		System.out.print("fetching freeflowSpeed... ");
 		fetchFreeflowSpeed();
@@ -116,7 +113,7 @@ public class PlacesGenerator {
 		System.out.println("CurrentSpeeds fetched :: " + stopWatch.lap());
 		System.out.println("generating places... ");
 		fetchPlacesDetails();
-		System.out.println("Places Generated :: " + placesMap.size() + " :: " + stopWatch.totalTime());
+		System.out.println("Places Generated :: " + placesMap.size() + " :: " + stopWatch.lap());
 		executorService.shutdown();
 		return placesMap;
 	}

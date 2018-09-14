@@ -1,6 +1,7 @@
 package com.traffic.dao;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,10 +36,12 @@ public class CityCongestionsDao implements MongoConstants {
 	}
 
 	public void addAll(List<Congestion> congestionList) {
+		List<Document> allCongestions = new LinkedList<>();
 		for (Congestion congestion : congestionList) {
 			Document d = mapper.toDocument(congestion);
-			collection.insertOne(d);
+			allCongestions.add(d);
 		}
+		collection.insertMany(allCongestions);
 	}
 
 	public List<Congestion> getAll() {
