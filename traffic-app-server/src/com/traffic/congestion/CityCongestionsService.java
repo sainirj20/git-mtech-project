@@ -1,7 +1,6 @@
 package com.traffic.congestion;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,30 +14,28 @@ import com.traffic.history.CongestionHistory;
 import com.traffic.log.MyLogger;
 import com.traffic.model.Congestion;
 import com.traffic.model.Place;
-import com.traffic.places.PlacesGenerator;
+import com.traffic.places.PlacesService;
 import com.traffic.utils.PropertiesUtil;
 
-public class CityCongestions {
-	private final Logger logger = MyLogger.getLogger(CityCongestions.class.getName());
+public class CityCongestionsService {
+	private final Logger logger = MyLogger.getLogger(CityCongestionsService.class.getName());
 
-	private final PlacesGenerator placesGenerator = new PlacesGenerator();
+	private final PlacesService placesService = new PlacesService();
 	private final Map<String, Congestion> allCityCongestions = new HashMap<>();
 
-	private List<Place> congestedPlaces;
 	private CongestionHistory congestionHistory;
 
-	public void generateCongestion() throws IOException {
+	public void processCongestions() throws IOException {
 		logger.log(Level.INFO, ":: CityCongestions ::");
 
-		// get congested places and
-		congestedPlaces = getCongestedPlaces();
-		congestionHistory = new CongestionHistory(congestedPlaces);
-		logger.log(Level.INFO, "Congested places found :: " + congestedPlaces.size());
+		// get congested places.
+		List<Place> congestedPlaces = placesService.getCongestedPlaces();
 
 		// save congested places to Congestion History
 		CongestionHistoryDao congestionHistoryDao = new CongestionHistoryDao();
 		congestionHistoryDao.insertOrUpdate(congestedPlaces);
 
+		// check for server mode
 		Boolean serverMode = Boolean.parseBoolean(PropertiesUtil.getPropertyValue("server.save.only.history"));
 		if (serverMode) {
 			logger.log(Level.INFO, "server.save.only.history is ON skipping the rest");
@@ -46,6 +43,7 @@ public class CityCongestions {
 		}
 
 		// group them into small and large congestion(s)
+		congestionHistory = new CongestionHistory(congestedPlaces);
 		CityCongestionsHelper helper = new CityCongestionsHelper(allCityCongestions);
 		helper.groupCongestedPlaces(congestedPlaces);
 
@@ -53,23 +51,10 @@ public class CityCongestions {
 		setCongestionType();
 
 		// save city Congestions to db
-		System.out.println("saving congestions to db...");
+		logger.log(Level.INFO, "saving congestions to db...");
 		CityCongestionsDao congestionsDao = new CityCongestionsDao();
 		congestionsDao.drop();
 		congestionsDao.addAll(new LinkedList<Congestion>(allCityCongestions.values()));
-	}
-
-	private List<Place> getCongestedPlaces() throws IOException {
-		Map<String, Place> placesMap = placesGenerator.generatePlaces();
-
-		// get congested places
-		List<Place> congestedPlaces = new ArrayList<Place>();
-		placesMap.forEach((placeId, place) -> {
-			if (place.isPlaceCongested() && place.hasLocationDetails()) {
-				congestedPlaces.add(place);
-			}
-		});
-		return congestedPlaces;
 	}
 
 	private void setCongestionType() {
@@ -90,4 +75,5 @@ public class CityCongestions {
 		logger.log(Level.INFO, "Large congestions :: " + large);
 		logger.log(Level.INFO, "UnUsual congestions :: " + unUsual);
 	}
+
 }

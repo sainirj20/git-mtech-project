@@ -1,27 +1,30 @@
 package com.traffic.places;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.traffic.dao.PlacesDao;
+import com.traffic.log.MyLogger;
 import com.traffic.model.Place;
 import com.traffic.utils.GoogleAPIsUtil;
 import com.traffic.utils.StopWatch;
 import com.traffic.utils.URLBuilder;
 
-public class PlacesGenerator {
+public class PlacesService {
+	private final Logger logger = MyLogger.getLogger(PlacesService.class.getName());
+
 	private final PlacesDao placesDao = new PlacesDao();
+	private final PlaceDetailsTask detailsTask;
 	private Map<String, Place> placesMap;
 
-	private final int threadPoolSize = 50;
-	private ExecutorService executorService = null;
-	private final List<Callable<Place>> callables = new ArrayList<Callable<Place>>();
+	public PlacesService() {
+		placesMap = placesDao.getAll();
+		detailsTask = new PlaceDetailsTask(placesDao);
+	}
 
 	@SuppressWarnings("unchecked")
 	private void fetchFreeflowSpeed() throws IOException {
@@ -66,55 +69,24 @@ public class PlacesGenerator {
 		}
 	}
 
-	private void fetchPlacesDetails() {
-		int threadCtr = 0, index = 0;
-		for (Place place : placesMap.values()) {
-			if (!place.hasLocationDetails()) {
-				if (place.isPlaceCongested() && threadCtr < threadPoolSize) {
-					callables.add(new PlaceDetailsTask(place));
-					threadCtr++;
-				}
-			}
-			if (threadCtr == threadPoolSize) {
-				System.out.println("processed :: " + index + " of " + placesMap.size());
-				executeThreadPool();
-				threadCtr = 0;
-			}
-			index++;
-		}
-		executeThreadPool();
-	}
-
-	private void executeThreadPool() {
-		if (callables.size() == 0) {
-			return;
-		}
-		try {
-			List<Future<Place>> futures = executorService.invokeAll(callables);
-			for (Future<Place> future : futures) {
-				Place place = future.get();
-				placesDao.addOrUpdate(place);
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		callables.clear();
-	}
-
-	public Map<String, Place> generatePlaces() throws IOException {
+	public List<Place> getCongestedPlaces() throws IOException {
 		StopWatch stopWatch = new StopWatch();
-		placesMap = placesDao.getAll();
-		executorService = Executors.newFixedThreadPool(threadPoolSize);
-		System.out.print("fetching freeflowSpeed... ");
 		fetchFreeflowSpeed();
-		System.out.println("FreeflowSpeed fetched :: " + stopWatch.lap());
-		System.out.print("fetching currentSpeeds... ");
+		logger.log(Level.INFO, "FreeflowSpeed fetched :: " + stopWatch.lap());
 		fetchCurrentSpeeds();
-		System.out.println("CurrentSpeeds fetched :: " + stopWatch.lap());
-		System.out.println("generating places... ");
-		fetchPlacesDetails();
-		System.out.println("Places Generated :: " + placesMap.size() + " :: " + stopWatch.lap());
-		executorService.shutdown();
-		return placesMap;
+		logger.log(Level.INFO, "CurrentSpeeds fetched :: " + stopWatch.lap());
+
+		// getting only congested places
+		List<Place> congestedPlaces = new LinkedList<>();
+		placesMap.forEach((placeId, place) -> {
+			if (place.isPlaceCongested() && !place.hasLocationDetails()) {
+				congestedPlaces.add(place);
+			}
+		});
+		detailsTask.fetchPlacesDetails(congestedPlaces);
+
+		logger.log(Level.INFO, "Congested Places found :: " + congestedPlaces.size() + " :: " + stopWatch.lap());
+		return congestedPlaces;
 	}
+
 }
