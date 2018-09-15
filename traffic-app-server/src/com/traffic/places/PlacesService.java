@@ -79,7 +79,7 @@ public class PlacesService {
 		// getting only congested places
 		List<Place> congestedPlaces = new LinkedList<>();
 		placesMap.forEach((placeId, place) -> {
-			if (place.isPlaceCongested() && !place.hasLocationDetails()) {
+			if (place.isPlaceCongested()) {
 				congestedPlaces.add(place);
 			}
 		});

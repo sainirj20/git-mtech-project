@@ -43,7 +43,7 @@ public class PlaceDetailsTask {
 				place.setLng(Double.parseDouble(location.get("lng").toString()));
 				place.setAddress((String) result.get("formatted_address"));
 			} catch (Exception e) {
-				logger.log(Level.SEVERE, Thread.currentThread().getName() + " :: " + e.getMessage(), e);
+				System.out.println(Thread.currentThread().getName() + " :: " + e.getMessage());
 				return null;
 			}
 			return this.place;
