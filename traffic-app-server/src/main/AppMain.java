@@ -8,26 +8,35 @@ import com.traffic.congestion.CityCongestionsService;
 import com.traffic.utils.PropertiesUtil;
 import com.traffic.utils.StopWatch;
 
-public class AppMain extends TimerTask {
+public class AppMain {
+	private final long executionPeriod = 3 * StopWatch.MINUTE;
+
 	private final StopWatch stopWatch = new StopWatch();
 	private final CityCongestionsService cityCongestions = new CityCongestionsService();
 
-	@Override
-	public void run() {
-		System.out.println(stopWatch.reset());
-		try {
-			PropertiesUtil.reloadProperties();
-			cityCongestions.processCongestions();
-		} catch (Exception e) {
-			e.printStackTrace();
+	private class Task extends TimerTask {
+		@Override
+		public void run() {
+			System.out.println(stopWatch.reset());
+			try {
+				PropertiesUtil.reloadProperties();
+				cityCongestions.processCongestions();
+				System.out.print("sleeping now.. will wake up in : ");
+				stopWatch.showTimer(executionPeriod);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		System.out.println(stopWatch.lap());
+	}
+
+	private void start() {
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new Task(), 0, executionPeriod);
 	}
 
 	public static void main(String[] args) throws IOException {
-		TimerTask timerTask = new AppMain();
-		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(timerTask, 0, 30 * 1 * 1000);
+		AppMain main = new AppMain();
+		main.start();
 	}
 
 }

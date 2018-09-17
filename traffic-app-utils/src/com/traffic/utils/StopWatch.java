@@ -3,6 +3,7 @@ package com.traffic.utils;
 import java.util.Date;
 
 public class StopWatch {
+	public static final long MINUTE = 60 * 1000;
 	private long startTime = System.currentTimeMillis();
 
 	public StopWatch() {
@@ -20,7 +21,21 @@ public class StopWatch {
 		startTime = System.currentTimeMillis();
 		return result;
 	}
-	
+
+	public void showTimer(long stopTime) {
+		long currentTime = System.currentTimeMillis() - startTime;
+		while ((stopTime - currentTime) > MINUTE) {
+			long min = ((stopTime - currentTime) / MINUTE) + 1;
+			System.out.print(min + "min... ");
+			try {
+				Thread.sleep(MINUTE);
+			} catch (InterruptedException e) {
+			}
+			currentTime = System.currentTimeMillis() - startTime;
+		}
+		System.out.println((stopTime - currentTime) / 1000 + "sec... ");
+	}
+
 	private String getFormatedTime(long stopTime) {
 		long endTimeInSeconds = (stopTime - startTime) / 1000;
 		long minutes = endTimeInSeconds / 60;
