@@ -13,13 +13,8 @@ import com.traffic.utils.URLBuilder;
 
 public class PlacesService {
 	private final PlacesDao placesDao = new PlacesDao();
-	private final PlaceDetailsTask detailsTask;
+	private final PlaceDetailsTask detailsTask = new PlaceDetailsTask();
 	private Map<String, Place> placesMap;
-
-	public PlacesService() {
-		placesMap = placesDao.getAll();
-		detailsTask = new PlaceDetailsTask(placesDao);
-	}
 
 	@SuppressWarnings("unchecked")
 	private void fetchFreeflowSpeed() throws IOException {
@@ -66,6 +61,7 @@ public class PlacesService {
 
 	public List<Place> getCongestedPlaces() throws IOException {
 		StopWatch stopWatch = new StopWatch();
+		placesMap = placesDao.getAll();
 		fetchFreeflowSpeed();
 		System.out.println("FreeflowSpeed fetched :: " + stopWatch.lap());
 		fetchCurrentSpeeds();

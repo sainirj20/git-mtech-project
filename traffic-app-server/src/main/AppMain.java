@@ -9,7 +9,8 @@ import com.traffic.utils.PropertiesUtil;
 import com.traffic.utils.StopWatch;
 
 public class AppMain {
-	private final long executionPeriod = 3 * StopWatch.MINUTE;
+	private final long executionPeriod = PropertiesUtil.getPropertyInteger("server.execution.period")
+			* StopWatch.MINUTE;
 
 	private final StopWatch stopWatch = new StopWatch();
 	private final CityCongestionsService cityCongestions = new CityCongestionsService();

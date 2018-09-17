@@ -46,11 +46,7 @@ public class PlaceDetailsTask {
 		}
 	}
 
-	private final PlacesDao placesDao;
-
-	public PlaceDetailsTask(PlacesDao placesDao) {
-		this.placesDao = placesDao;
-	}
+	private final PlacesDao placesDao = new PlacesDao();
 
 	private final int threadPoolSize = 50;
 	private ExecutorService executorService = null;
@@ -68,8 +64,9 @@ public class PlaceDetailsTask {
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+		} finally {
+			callables.clear();
 		}
-		callables.clear();
 	}
 
 	public void fetchPlacesDetails(List<Place> congestedPlaces) {
@@ -83,19 +80,23 @@ public class PlaceDetailsTask {
 		System.out.println("Fetching places details with congestion");
 		executorService = Executors.newFixedThreadPool(threadPoolSize);
 		int threadCtr = 0, index = 0;
-		for (Place place : congestedPlaces) {
-			if (threadCtr < threadPoolSize) {
-				callables.add(new PlaceDetailsCallable(place));
-				threadCtr++;
+		callables.clear();
+		try {
+			for (Place place : congestedPlaces) {
+				if (threadCtr < threadPoolSize) {
+					callables.add(new PlaceDetailsCallable(place));
+					threadCtr++;
+				}
+				if (threadCtr == threadPoolSize) {
+					System.out.println("processed :: " + index + " of " + congestedPlaces.size());
+					executeThreadPool();
+					threadCtr = 0;
+				}
+				index++;
 			}
-			if (threadCtr == threadPoolSize) {
-				System.out.println("processed :: " + index + " of " + congestedPlaces.size());
-				executeThreadPool();
-				threadCtr = 0;
-			}
-			index++;
+			executeThreadPool();
+		} finally {
+			executorService.shutdown();
 		}
-		executeThreadPool();
-		executorService.shutdown();
 	}
 }

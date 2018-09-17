@@ -1,5 +1,6 @@
 package com.traffic.congestion;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,15 +10,11 @@ import com.traffic.utils.DistanceUtil;
 import com.traffic.utils.StopWatch;
 
 class CityCongestionsHelper {
-	private final Map<String, Congestion> allCityCongestions;
+	private Map<String, Congestion> allCityCongestions;
 
-	CityCongestionsHelper(Map<String, Congestion> allCityCongestions) {
-		this.allCityCongestions = allCityCongestions;
-	}
-
-	void groupCongestedPlaces(List<Place> congestedPlaces) {
+	Map<String, Congestion> groupCongestedPlaces(List<Place> congestedPlaces) {
 		System.out.println("gropuing congested places...");
-
+		allCityCongestions = new HashMap<>();
 		int ctr = 0;
 		StopWatch watch = new StopWatch();
 		for (Place srcPlace : congestedPlaces) {
@@ -27,6 +24,7 @@ class CityCongestionsHelper {
 			Congestion congestion = getCongestion(srcPlace);
 			congestedPlaces.forEach(destPlace -> addToCongestion(congestion, destPlace));
 		}
+		return allCityCongestions;
 	}
 
 	private Congestion getCongestion(Place place) {

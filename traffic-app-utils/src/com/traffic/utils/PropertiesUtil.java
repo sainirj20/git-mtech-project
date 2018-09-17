@@ -32,4 +32,12 @@ public class PropertiesUtil {
 		return prop.getProperty(key);
 	}
 
+	public static Integer getPropertyInteger(String key) {
+		return Integer.parseInt(prop.getProperty(key));
+	}
+
+	public static Boolean getPropertyBoolean(String key) {
+		return Boolean.parseBoolean(prop.getProperty(key));
+	}
+
 }

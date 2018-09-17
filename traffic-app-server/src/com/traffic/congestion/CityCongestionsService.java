@@ -1,7 +1,6 @@
 package com.traffic.congestion;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +15,13 @@ import com.traffic.utils.PropertiesUtil;
 
 public class CityCongestionsService {
 	private final PlacesService placesService = new PlacesService();
-	private final Map<String, Congestion> allCityCongestions = new HashMap<>();
+	private Map<String, Congestion> allCityCongestions;
 
 	private CongestionHistory congestionHistory;
 
 	public void processCongestions() throws IOException {
 		System.out.println(":: CityCongestions ::");
-
+		
 		// get congested places.
 		List<Place> congestedPlaces = placesService.getCongestedPlaces();
 
@@ -38,11 +37,11 @@ public class CityCongestionsService {
 		}
 
 		// group them into small and large congestion(s)
-		congestionHistory = new CongestionHistory(congestedPlaces);
-		CityCongestionsHelper helper = new CityCongestionsHelper(allCityCongestions);
-		helper.groupCongestedPlaces(congestedPlaces);
+		CityCongestionsHelper helper = new CityCongestionsHelper();
+		allCityCongestions = helper.groupCongestedPlaces(congestedPlaces);
 
 		// set congestion type
+		congestionHistory = new CongestionHistory(congestedPlaces);
 		setCongestionType();
 
 		// save city Congestions to db
