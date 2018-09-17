@@ -5,28 +5,23 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.traffic.dao.CityCongestionsDao;
 import com.traffic.dao.CongestionHistoryDao;
 import com.traffic.history.CongestionHistory;
-import com.traffic.log.MyLogger;
 import com.traffic.model.Congestion;
 import com.traffic.model.Place;
 import com.traffic.places.PlacesService;
 import com.traffic.utils.PropertiesUtil;
 
 public class CityCongestionsService {
-	private final Logger logger = MyLogger.getLogger(CityCongestionsService.class.getName());
-
 	private final PlacesService placesService = new PlacesService();
 	private final Map<String, Congestion> allCityCongestions = new HashMap<>();
 
 	private CongestionHistory congestionHistory;
 
 	public void processCongestions() throws IOException {
-		logger.log(Level.INFO, ":: CityCongestions ::");
+		System.out.println(":: CityCongestions ::");
 
 		// get congested places.
 		List<Place> congestedPlaces = placesService.getCongestedPlaces();
@@ -38,7 +33,7 @@ public class CityCongestionsService {
 		// check for server mode
 		Boolean serverMode = Boolean.parseBoolean(PropertiesUtil.getPropertyValue("server.save.only.history"));
 		if (serverMode) {
-			logger.log(Level.INFO, "server.save.only.history is ON skipping the rest");
+			System.out.println("server.save.only.history is ON skipping the rest");
 			return;
 		}
 
@@ -51,7 +46,7 @@ public class CityCongestionsService {
 		setCongestionType();
 
 		// save city Congestions to db
-		logger.log(Level.INFO, "saving congestions to db...");
+		System.out.println("saving congestions to db...");
 		CityCongestionsDao congestionsDao = new CityCongestionsDao();
 		congestionsDao.drop();
 		congestionsDao.addAll(new LinkedList<Congestion>(allCityCongestions.values()));
@@ -71,9 +66,9 @@ public class CityCongestionsService {
 				large--;
 			}
 		}
-		logger.log(Level.INFO, "Small congestions :: " + small);
-		logger.log(Level.INFO, "Large congestions :: " + large);
-		logger.log(Level.INFO, "UnUsual congestions :: " + unUsual);
+		System.out.println("Small congestions :: " + small);
+		System.out.println("Large congestions :: " + large);
+		System.out.println("UnUsual congestions :: " + unUsual);
 	}
 
 }

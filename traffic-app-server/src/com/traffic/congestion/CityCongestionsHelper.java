@@ -2,17 +2,13 @@ package com.traffic.congestion;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import com.traffic.log.MyLogger;
 import com.traffic.model.Congestion;
 import com.traffic.model.Place;
 import com.traffic.utils.DistanceUtil;
 import com.traffic.utils.StopWatch;
 
 class CityCongestionsHelper {
-	private final Logger logger = MyLogger.getLogger(CityCongestionsHelper.class.getName());
 	private final Map<String, Congestion> allCityCongestions;
 
 	CityCongestionsHelper(Map<String, Congestion> allCityCongestions) {
@@ -26,7 +22,7 @@ class CityCongestionsHelper {
 		StopWatch watch = new StopWatch();
 		for (Place srcPlace : congestedPlaces) {
 			if (ctr++ % 500 == 0) {
-				logger.log(Level.INFO, "gropuing :: " + ctr + " of " + congestedPlaces.size() + " :: " + watch.lap());
+				System.out.println("gropuing :: " + ctr + " of " + congestedPlaces.size() + " :: " + watch.lap());
 			}
 			Congestion congestion = getCongestion(srcPlace);
 			congestedPlaces.forEach(destPlace -> addToCongestion(congestion, destPlace));

@@ -7,18 +7,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.traffic.dao.PlacesDao;
-import com.traffic.log.MyLogger;
 import com.traffic.model.Place;
 import com.traffic.utils.GoogleAPIsUtil;
 import com.traffic.utils.URLBuilder;
 
 public class PlaceDetailsTask {
-	private final Logger logger = MyLogger.getLogger(PlaceDetailsTask.class.getName());
-
 	private class PlaceDetailsCallable implements Callable<Place> {
 		private Place place = null;
 
@@ -77,11 +73,14 @@ public class PlaceDetailsTask {
 	}
 
 	public void fetchPlacesDetails(List<Place> congestedPlaces) {
+		congestedPlaces = congestedPlaces.stream().filter(place -> !place.hasLocationDetails())
+				.collect(Collectors.toList());
+
 		if (congestedPlaces.size() == 0) {
 			return;
 		}
 
-		logger.log(Level.INFO, "Fetching places details with congestion");
+		System.out.println("Fetching places details with congestion");
 		executorService = Executors.newFixedThreadPool(threadPoolSize);
 		int threadCtr = 0, index = 0;
 		for (Place place : congestedPlaces) {
@@ -90,7 +89,7 @@ public class PlaceDetailsTask {
 				threadCtr++;
 			}
 			if (threadCtr == threadPoolSize) {
-				logger.log(Level.INFO, "processed :: " + index + " of " + congestedPlaces.size());
+				System.out.println("processed :: " + index + " of " + congestedPlaces.size());
 				executeThreadPool();
 				threadCtr = 0;
 			}

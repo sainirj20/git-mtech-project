@@ -1,24 +1,14 @@
 package com.traffic.dao;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoDatabase;
-import com.traffic.log.MyLogger;
 import com.traffic.utils.PropertiesUtil;
 
 final public class DatabaseInstance {
 	private static Object mutex = new Object();
 	private static MongoDatabase DATABASE;
-	{
-		Logger mongoLogger = MyLogger.getLogger("org.mongodb.driver");
-		mongoLogger.setLevel(Level.SEVERE);
-	}
-
-	private Logger logger = MyLogger.getLogger(DatabaseInstance.class.getName());
 
 	private final MongoClient mongo;
 
@@ -37,7 +27,7 @@ final public class DatabaseInstance {
 			MongoClientURI uri = new MongoClientURI(PropertiesUtil.getPropertyValue("mongo.uri"));
 			mongo = new MongoClient(uri);
 		}
-		logger.log(Level.INFO, "Connected to the database successfully");
+		System.out.println("Connected to the database successfully");
 		DATABASE = mongo.getDatabase(dbName);
 	}
 
