@@ -61,7 +61,9 @@ public class PlacesService {
 
 	public List<Place> getCongestedPlaces() throws IOException {
 		StopWatch stopWatch = new StopWatch();
+		System.out.println("fetching stored placed data from db...");
 		placesMap = placesDao.getAll();
+		System.out.println("Places data from db fetched :: " + stopWatch.lap());
 		fetchFreeflowSpeed();
 		System.out.println("FreeflowSpeed fetched :: " + stopWatch.lap());
 		fetchCurrentSpeeds();
@@ -79,5 +81,4 @@ public class PlacesService {
 		System.out.println("Congested Places found :: " + congestedPlaces.size() + " :: " + stopWatch.lap());
 		return congestedPlaces;
 	}
-
 }

@@ -18,6 +18,8 @@ import com.traffic.mongo.Mapper;
 import com.traffic.mongo.MongoConstants;
 
 public class PlacesDao implements MongoConstants {
+	private static final Map<String, Place> CACHE = new LinkedHashMap<String, Place>();
+
 	private final String collectionName = "Places";
 	private final MongoDatabase instance;
 	private final MongoCollection<Document> collection;
@@ -39,14 +41,19 @@ public class PlacesDao implements MongoConstants {
 		} catch (MongoWriteException e) {
 			collection.updateOne(eq(id, place.getPlaceId()), Updates.set(details, doc.get(details, Document.class)));
 		}
+		CACHE.put(place.getPlaceId(), place);
 	}
 
 	public Map<String, Place> getAll() {
+		if (CACHE.size() != 0) {
+			return CACHE;
+		}
 		Map<String, Place> placesMap = new LinkedHashMap<>();
 		FindIterable<Document> documents = collection.find();
 		for (Document doc : documents) {
 			Place place = mapper.fromDocument(doc);
 			placesMap.put(place.getPlaceId(), place);
+			CACHE.put(place.getPlaceId(), place);
 		}
 		return placesMap;
 	}
