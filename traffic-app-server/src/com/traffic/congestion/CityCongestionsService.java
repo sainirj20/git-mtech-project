@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.traffic.dao.CityCongestionsDao;
 import com.traffic.dao.CongestionHistoryDao;
-import com.traffic.history.CongestionHistory;
+import com.traffic.history.CongestionHistoryService;
 import com.traffic.model.Congestion;
 import com.traffic.model.Place;
 import com.traffic.places.PlacesService;
@@ -15,13 +15,10 @@ import com.traffic.utils.PropertiesUtil;
 
 public class CityCongestionsService {
 	private final PlacesService placesService = new PlacesService();
-	private Map<String, Congestion> allCityCongestions;
-
-	private CongestionHistory congestionHistory;
 
 	public void processCongestions() throws IOException {
 		System.out.println(":: CityCongestions ::");
-		
+
 		// get congested places.
 		List<Place> congestedPlaces = placesService.getCongestedPlaces();
 
@@ -38,11 +35,10 @@ public class CityCongestionsService {
 
 		// group them into small and large congestion(s)
 		CityCongestionsHelper helper = new CityCongestionsHelper();
-		allCityCongestions = helper.groupCongestedPlaces(congestedPlaces);
+		Map<String, Congestion> allCityCongestions = helper.groupCongestedPlaces(congestedPlaces);
 
 		// set congestion type
-		congestionHistory = new CongestionHistory(congestedPlaces);
-		setCongestionType();
+		setCongestionType(allCityCongestions, new CongestionHistoryService(congestedPlaces));
 
 		// save city Congestions to db
 		System.out.println("saving congestions to db...");
@@ -51,7 +47,7 @@ public class CityCongestionsService {
 		congestionsDao.addAll(new LinkedList<Congestion>(allCityCongestions.values()));
 	}
 
-	private void setCongestionType() {
+	private void setCongestionType(Map<String, Congestion> allCityCongestions, CongestionHistoryService congestionHistory) {
 		int small = 0, large = 0, unUsual = 0;
 		for (Congestion congestion : allCityCongestions.values()) {
 			Congestion.CongestionType type = congestion.setType();

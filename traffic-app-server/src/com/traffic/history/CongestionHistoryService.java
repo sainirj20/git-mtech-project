@@ -6,16 +6,17 @@ import java.util.Map;
 
 import com.traffic.dao.CongestionHistoryDao;
 import com.traffic.model.Congestion;
+import com.traffic.model.CongestionHistory;
 import com.traffic.model.Place;
 
-public class CongestionHistory {
+public class CongestionHistoryService {
 	private final Map<String, Integer> congestedPlacesAndDuration = new HashMap<>();
 	private final Map<String, Boolean> isNewCongestedPlacesMap = new HashMap<>();
 
-	private final List<List<String>> todaysHistory;
-	private final List<List<String>> weeksHistory;
+	private final List<CongestionHistory> todaysHistory;
+	private final List<CongestionHistory> weeksHistory;
 
-	public CongestionHistory(List<Place> congestedPlaces) {
+	public CongestionHistoryService(List<Place> congestedPlaces) {
 		for (Place place : congestedPlaces) {
 			congestedPlacesAndDuration.put(place.getPlaceId(), 0);
 			isNewCongestedPlacesMap.put(place.getPlaceId(), false);
@@ -30,17 +31,14 @@ public class CongestionHistory {
 	private void init() {
 		for (String placeId : congestedPlacesAndDuration.keySet()) {
 			int duration = 0;
-			for (List<String> hour : todaysHistory) {
-				if (0 == hour.size()) {
-					continue;
-				}
-				duration += hour.contains(placeId) ? 10 : -10;
+			for (CongestionHistory hourOfDay : todaysHistory) {
+				duration += hourOfDay.contains(placeId) ? 10 : -10;
 				duration = (duration < 0) ? 0 : duration;
 			}
 			congestedPlacesAndDuration.put(placeId, duration);
 			boolean isNew = true;
-			for (List<String> day : weeksHistory) {
-				if (0 == day.size() || day.contains(placeId)) {
+			for (CongestionHistory dayOfWeek : weeksHistory) {
+				if (dayOfWeek.contains(placeId)) {
 					isNew = false;
 					break;
 				}
@@ -58,5 +56,4 @@ public class CongestionHistory {
 		});
 		return congestion.getType() == Congestion.CongestionType.UNUSUAL.getValue();
 	}
-
 }

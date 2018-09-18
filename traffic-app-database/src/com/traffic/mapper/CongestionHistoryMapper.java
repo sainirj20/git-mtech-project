@@ -1,29 +1,28 @@
 package com.traffic.mapper;
 
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 
 import org.bson.Document;
 
+import com.traffic.model.CongestionHistory;
 import com.traffic.mongo.Mapper;
-import com.traffic.utils.HistoryKeyMaker;
 
-public class CongestionHistoryMapper implements Mapper<List<String>> {
-	
+public class CongestionHistoryMapper implements Mapper<CongestionHistory> {
+
 	@Override
-	public Document toDocument(List<String> list) {
-		Object historyKey = new HistoryKeyMaker().getKey();
-		Document document = new Document(id, historyKey);
-		document.append(details, list);
+	public Document toDocument(CongestionHistory history) {
+		Document document = new Document(id, history.getHistoryKey());
+		document.append(details, history.getCongestedPlaces());
 		return document;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<String> fromDocument(Document document) {
-		List<String> history = new LinkedList<>();
-		history.addAll((Collection<? extends String>) document.getOrDefault(details, new LinkedList<>()));
+	public CongestionHistory fromDocument(Document document) {
+		CongestionHistory history = new CongestionHistory();
+		history.setHistoryKey(document.getString(id));
+		history.addAll((Collection<? extends String>) document.getOrDefault(details, new HashSet<>()));
 		return history;
 	}
 }
