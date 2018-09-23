@@ -14,6 +14,7 @@ public class CityCongestionsMapper implements Mapper<Congestion> {
 	private final String placeIdList = "placeIdList";
 	private final String duration = "duration";
 	private final String type = "type";
+	private final String key = "key";
 
 	private Map<String, Place> placesMap = null;
 
@@ -30,6 +31,7 @@ public class CityCongestionsMapper implements Mapper<Congestion> {
 		Document congestionDetails = new Document(placeIdList, placeIds);
 		congestionDetails.append(duration, congestion.getDuration());
 		congestionDetails.append(type, congestion.getType());
+		congestionDetails.append(key, congestion.getKey());
 
 		Document document = new Document();
 		document.append(details, congestionDetails);
@@ -47,6 +49,7 @@ public class CityCongestionsMapper implements Mapper<Congestion> {
 		}
 		congestion.setDuration(doc.getInteger(duration, 0));
 		congestion.setType(doc.getInteger(type, 0));
+		congestion.setKey(doc.getString(key));
 		return congestion;
 	}
 

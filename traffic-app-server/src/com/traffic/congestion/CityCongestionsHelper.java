@@ -11,6 +11,11 @@ import com.traffic.utils.StopWatch;
 
 class CityCongestionsHelper {
 	private Map<String, Congestion> allCityCongestions;
+	private final String congestionKey;
+	
+	public CityCongestionsHelper(String key) {
+		congestionKey = key;
+	}
 
 	Map<String, Congestion> groupCongestedPlaces(List<Place> congestedPlaces) {
 		System.out.println("gropuing congested places...");
@@ -32,6 +37,7 @@ class CityCongestionsHelper {
 			return allCityCongestions.get(place.getPlaceId());
 		} else {
 			Congestion congestion = new Congestion(place);
+			congestion.setKey(congestionKey);
 			allCityCongestions.put(place.getPlaceId(), congestion);
 			return congestion;
 		}

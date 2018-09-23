@@ -24,7 +24,7 @@ public class CityCongestionsService {
 
 		// save congested places to Congestion History
 		CongestionHistoryDao congestionHistoryDao = new CongestionHistoryDao();
-		congestionHistoryDao.insertOrUpdate(congestedPlaces);
+		String key  = congestionHistoryDao.insertOrUpdate(congestedPlaces);
 
 		// check for server mode
 		Boolean serverMode = Boolean.parseBoolean(PropertiesUtil.getPropertyValue("server.save.only.history"));
@@ -34,7 +34,7 @@ public class CityCongestionsService {
 		}
 
 		// group them into small and large congestion(s)
-		CityCongestionsHelper helper = new CityCongestionsHelper();
+		CityCongestionsHelper helper = new CityCongestionsHelper(key);
 		Map<String, Congestion> allCityCongestions = helper.groupCongestedPlaces(congestedPlaces);
 
 		// set congestion type

@@ -8,6 +8,7 @@
 	<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link type="text/css" rel="stylesheet" href="css/style.css"/>
+	<% response.setIntHeader("Refresh", 5*60); %>
 </head>
 <script src="js/onload.js"></script>
 
@@ -21,7 +22,7 @@
 				<ul class="nav-menu nav navbar-nav">
 					<li class="cat-1">
 						<a href="home.jsp">
-						<font <% if(session.getAttribute("pageName").equals("HOME")) {%> color="#4BB92F"<%}%> >Home</font>
+						<font <% if(session.getAttribute("pageName").equals("HOME")) {%> color="#4BB92F"<%}%> >	Home </font>
 						</a>
 					</li>
 					<li class="cat-2">

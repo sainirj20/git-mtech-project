@@ -53,4 +53,10 @@ public class CityCongestionsDao implements MongoConstants {
 		}
 		return list;
 	}
+	
+	public boolean hasNewCongestion(String oldCongestionKey) {
+		Document doc = collection.find().first();
+		Congestion congestion = mapper.fromDocument(doc);
+		return !congestion.getKey().equals(oldCongestionKey);
+	}
 }

@@ -7,7 +7,7 @@
 			<div class="col-md-5" style="width: 38%">
 				<div class="footer-widget">
 					<div class="footer-logo">
-						<a href="index.html" class="logo"><img src="./img/jam-words.png" alt="" height="150px"></a>
+						<a href="home.jsp" class="logo"><img src="./img/jam-words.png" alt="" height="150px"></a>
 					</div>
 				</div>
 			</div>

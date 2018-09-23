@@ -17,6 +17,7 @@ public class Groups {
 	private Set<Place> unUnsualCongestions = new HashSet<>();
 
 	public void init() {
+		// hasNewCongestion logic here
 		List<Congestion> groups = clustersDao.getAll();
 		for (Congestion congestion : groups) {
 			if (congestion.getType() == Congestion.CongestionType.SMALL.getValue())

@@ -3,9 +3,10 @@
 <html>
 <% session.setAttribute("pageName", "HOME"); %>
 <%@ include file = "header.jsp" %>
-<jsp:useBean id="groups" class="com.traffic.map.Groups" /> <%groups.init();%>
+<jsp:useBean id="groups" class="com.traffic.map.Groups" />
 
 <body>
+	<%groups.init();%>
 	<div style="margin: 2% 8% 0 8%; height: 500px; border: 2px solid #3872ac;">
 		<div id="map" style="width: 100%; height: 100%"></div> 
 	</div>
@@ -34,7 +35,6 @@
 				largeCircle = addCircles(map, <%=groups.getUnUnsualCongestions() %>, 50, "#FF0000");
 			}
 		}
-		// applyFilter();
 		google.maps.event.addDomListener(window, 'load', applyFilter);
 	</script>
 </body>

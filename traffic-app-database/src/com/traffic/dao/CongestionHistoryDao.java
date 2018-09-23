@@ -38,13 +38,14 @@ public class CongestionHistoryDao implements MongoConstants {
 		mapper = new CongestionHistoryMapper();
 	}
 
-	public void insertOrUpdate(List<Place> congestedPlaces) {
+	public String insertOrUpdate(List<Place> congestedPlaces) {
+		String historyKey = historyKeyMaker.getKey();
 		if (null == congestedPlaces || 0 == congestedPlaces.size()) {
-			return;
+			return historyKey;
 		}
 
 		CongestionHistory history = new CongestionHistory();
-		history.setHistoryKey(historyKeyMaker.getKey());
+		history.setHistoryKey(historyKey);
 		history.setCongestedPlaces(
 				congestedPlaces.stream().map(place -> place.getPlaceId()).collect(Collectors.toSet()));
 
@@ -54,6 +55,7 @@ public class CongestionHistoryDao implements MongoConstants {
 		} catch (MongoWriteException e) {
 			collection.updateOne(eq(id, doc.get(id)), Updates.set(details, doc.get(details)));
 		}
+		return historyKey;
 	}
 
 	public List<CongestionHistory> getTodaysHistory() {

@@ -15,8 +15,9 @@ public final class Congestion extends HashSet<Place> {
 			return value;
 		}
 	}
-
+	
 	private static final long serialVersionUID = -4037137473313165293L;
+	private String key;  // history key
 	private int duration = 0; // in mins
 	private CongestionType type = null;
 
@@ -61,6 +62,14 @@ public final class Congestion extends HashSet<Place> {
 
 	public int getDuration() {
 		return duration;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 }
