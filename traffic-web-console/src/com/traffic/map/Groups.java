@@ -12,13 +12,21 @@ import com.traffic.model.Place;
 public class Groups {
 	private CityCongestionsDao clustersDao = new CityCongestionsDao();
 
+	private List<Congestion> groups;
+
 	private Set<Place> smallCongestions = new HashSet<>();
 	private Set<Place> largeCongestions = new HashSet<>();
 	private Set<Place> unUnsualCongestions = new HashSet<>();
 
+	public boolean hasNewCongestion() {
+		if (null != groups && groups.size() > 0) {
+			return clustersDao.hasNewCongestion(groups.get(0).getKey());
+		}
+		return true;
+	}
+
 	public void init() {
-		// hasNewCongestion logic here
-		List<Congestion> groups = clustersDao.getAll();
+		groups = clustersDao.getAll();
 		for (Congestion congestion : groups) {
 			if (congestion.getType() == Congestion.CongestionType.SMALL.getValue())
 				smallCongestions.addAll(congestion);
@@ -34,7 +42,7 @@ public class Groups {
 	}
 
 	private String getCongestionsList(Set<Place> congestionsSet) {
-		if(congestionsSet.size()==0) {
+		if (congestionsSet.size() == 0) {
 			return "[]";
 		}
 		StringBuilder sb = new StringBuilder("[\n");
@@ -43,7 +51,7 @@ public class Groups {
 			Place p = itr.next();
 			sb.append("\t[" + p.getLat() + ", " + p.getLng() + ", \"" + p.getAddress() + "\"] ,\n");
 		}
-		sb.deleteCharAt(sb.length()-2);
+		sb.deleteCharAt(sb.length() - 2);
 		return sb.append("]").toString();
 	}
 
