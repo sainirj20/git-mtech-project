@@ -38,11 +38,11 @@
 
 			<div class="col-md-3">
 				<div class="footer-widget">
-					<h3 class="footer-title">Top Congestions</h3>
+					<h3 class="footer-title">Current Congestions</h3>
 					<ul class="footer-links">
-						<li>xxx</li>
-						<li><a href="#">yyy</a></li>
-						<li><a href="#">cccc</a></li>
+						<li>Small : </li>
+						<li>Large : </li>
+						<li>Unusual :</li>
 					</ul>
 				</div>
 			</div>

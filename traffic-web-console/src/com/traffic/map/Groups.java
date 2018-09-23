@@ -1,5 +1,6 @@
 package com.traffic.map;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +13,7 @@ import com.traffic.model.Place;
 public class Groups {
 	private CityCongestionsDao clustersDao = new CityCongestionsDao();
 
-	private List<Congestion> groups;
+	private List<Congestion> groups = new ArrayList<>();
 
 	private Set<Place> smallCongestions = new HashSet<>();
 	private Set<Place> largeCongestions = new HashSet<>();
