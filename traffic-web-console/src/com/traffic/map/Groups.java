@@ -1,6 +1,7 @@
 package com.traffic.map;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -31,18 +32,29 @@ public class Groups {
 		}
 	}
 
-	public Set<Place> getSmallCongestions() {
-		System.out.println("small Congestions list :: " + smallCongestions.size());
-		return smallCongestions;
+	private String getCongestionsList(Set<Place> congestionsSet) {
+		if(congestionsSet.size()==0) {
+			return "[]";
+		}
+		StringBuilder sb = new StringBuilder("[\n");
+		Iterator<Place> itr = congestionsSet.iterator();
+		while (itr.hasNext()) {
+			Place p = itr.next();
+			sb.append("\t[" + p.getLat() + ", " + p.getLng() + ", \"" + p.getAddress() + "\"] ,\n");
+		}
+		sb.deleteCharAt(sb.length()-2);
+		return sb.append("]").toString();
 	}
 
-	public Set<Place> getLargeCongestions() {
-		System.out.println("large Congestions list :: " + largeCongestions.size());
-		return largeCongestions;
+	public String getSmallCongestions() {
+		return getCongestionsList(smallCongestions);
 	}
 
-	public Set<Place> getUnUnsualCongestions() {
-		System.out.println("Un-unsual Congestions list :: " + unUnsualCongestions.size());
-		return unUnsualCongestions;
+	public String getLargeCongestions() {
+		return getCongestionsList(largeCongestions);
+	}
+
+	public String getUnUnsualCongestions() {
+		return getCongestionsList(unUnsualCongestions);
 	}
 }
