@@ -36,14 +36,13 @@ public class CongestionHistoryService {
 				duration = (duration < 0) ? 0 : duration;
 			}
 			congestedPlacesAndDuration.put(placeId, duration);
-			boolean isNew = true;
+			int newCongestionCount = 0;
 			for (CongestionHistory dayOfWeek : weeksHistory) {
 				if (dayOfWeek.contains(placeId)) {
-					isNew = false;
-					break;
+					newCongestionCount++;
 				}
 			}
-			if (isNew && duration <= 30) {
+			if (0 < newCongestionCount && newCongestionCount < weeksHistory.size() * 0.2 && duration <= 30) {
 				isNewCongestedPlacesMap.put(placeId, true);
 			}
 		}

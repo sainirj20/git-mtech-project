@@ -12,7 +12,7 @@ public class StopWatch {
 
 	public String reset() {
 		startTime = System.currentTimeMillis();
-		return "[job started at " + new Date(startTime) + "]";
+		return "\n[job started at " + new Date(startTime) + "]";
 	}
 
 	public String lap() {

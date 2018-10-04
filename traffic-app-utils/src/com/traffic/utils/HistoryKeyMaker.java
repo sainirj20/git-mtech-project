@@ -9,9 +9,9 @@ public class HistoryKeyMaker {
 	private final String pattern = "yyyy-MMMMM-dd-E-HH-mm";
 	private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
-	private final int roundTo = 10;	
-	private final int dayTime[] = { 6, 21 };	// 6am-10pm
-	private final int weekend[] = { 1, 7 };		// Sunday=1 and Saturday=7
+	private final int roundTo = 10;
+	private final int dayTime[] = { 6, 21 }; // 6am-10pm
+	private final int weekend[] = { 1, 7 }; // Sunday=1 and Saturday=7
 
 	public String getKey() {
 		Calendar today = Calendar.getInstance();
@@ -54,16 +54,21 @@ public class HistoryKeyMaker {
 		List<String> weekdays = new LinkedList<>();
 		Calendar cal = Calendar.getInstance();
 		int currentDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-		int roundMin = cal.get(Calendar.MINUTE) / roundTo;
-		cal.set(Calendar.MINUTE, roundMin * roundTo);
+		int roundMin = (cal.get(Calendar.MINUTE) / roundTo) * roundTo;
+
 		for (int i = 0; i < 7; i++) {
+			cal.set(Calendar.MINUTE, roundMin);
 			cal.add(Calendar.DATE, -1);
 			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-			if (dayOfWeek == weekend[0] || dayOfWeek == weekend[1]) {
-				weekends.add(simpleDateFormat.format(cal.getTime()));
-			} else {
-				weekdays.add(simpleDateFormat.format(cal.getTime()));
+			for (int j = -roundTo; j <= roundTo; j += roundTo) {
+				cal.set(Calendar.MINUTE, roundMin + j);
+				if (dayOfWeek == weekend[0] || dayOfWeek == weekend[1]) {
+					weekends.add(simpleDateFormat.format(cal.getTime()));
+				} else {
+					weekdays.add(simpleDateFormat.format(cal.getTime()));
+				}
 			}
+
 		}
 		return (currentDayOfWeek == weekend[0] || currentDayOfWeek == weekend[1]) ? weekends : weekdays;
 	}

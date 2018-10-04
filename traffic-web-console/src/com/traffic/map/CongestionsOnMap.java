@@ -1,33 +1,25 @@
 package com.traffic.map;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.traffic.dao.CityCongestionsDao;
 import com.traffic.model.Congestion;
 import com.traffic.model.Place;
 
-public class Groups {
-	private CityCongestionsDao clustersDao = new CityCongestionsDao();
-
-	private List<Congestion> groups = new ArrayList<>();
-
+public class CongestionsOnMap {
+	private CityCongestionsBackEnd backEnd = CityCongestionsBackEnd.getInstance();
 	private Set<Place> smallCongestions = new HashSet<>();
 	private Set<Place> largeCongestions = new HashSet<>();
 	private Set<Place> unUnsualCongestions = new HashSet<>();
-
+	
 	public boolean hasNewCongestion() {
-		if (null != groups && groups.size() > 0) {
-			return clustersDao.hasNewCongestion(groups.get(0).getKey());
-		}
-		return true;
+		return backEnd.hasNewCongestion();
 	}
 
-	public void init() {
-		groups = clustersDao.getAll();
+	public void reload() {
+		List<Congestion> groups = backEnd.getGroups();
 		for (Congestion congestion : groups) {
 			if (congestion.getType() == Congestion.CongestionType.SMALL.getValue())
 				smallCongestions.addAll(congestion);

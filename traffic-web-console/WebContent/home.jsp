@@ -3,10 +3,15 @@
 <html>
 <% session.setAttribute("pageName", "HOME"); %>
 <%@ include file = "header.jsp" %>
-<jsp:useBean id="groups" class="com.traffic.map.Groups" />
+<jsp:useBean id="congestionsOnMap" class="com.traffic.map.CongestionsOnMap" />
 
 <body>
-	<%groups.init();%>
+
+	<script>
+		if(<%=congestionsOnMap.hasNewCongestion() %>) { location.reload(); 	}
+	</script>
+
+	<%congestionsOnMap.reload();%>
 	<div style="margin: 2% 8% 0 8%; height: 500px; border: 2px solid #3872ac;">
 		<div id="map" style="width: 100%; height: 100%"></div> 
 	</div>
@@ -22,17 +27,17 @@
 		
 			var smallCircle = [];
 			if (document.getElementById("smallCongestions").checked) {
-				smallCircle = addCircles(map, <%=groups.getSmallCongestions() %>, 30, "#FF3399");
+				smallCircle = addCircles(map, <%=congestionsOnMap.getSmallCongestions() %>, 30, "#FF3399");
 			} 
 			
 			var largeCircle = [];
 			if(document.getElementById("largeCongestions").checked) {
-				largeCircle = addCircles(map, <%=groups.getLargeCongestions() %>, 40, "#0000FF");
+				largeCircle = addCircles(map, <%=congestionsOnMap.getLargeCongestions() %>, 40, "#0000FF");
 			} 
 			
 			var unUsualCircle = [];			
 			if(document.getElementById("unusualCongestions").checked) {
-				largeCircle = addCircles(map, <%=groups.getUnUnsualCongestions() %>, 50, "#FF0000");
+				largeCircle = addCircles(map, <%=congestionsOnMap.getUnUnsualCongestions() %>, 50, "#FF0000");
 			}
 		}
 		google.maps.event.addDomListener(window, 'load', applyFilter);
