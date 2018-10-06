@@ -5,13 +5,17 @@
 <%@ include file = "header.jsp" %>
 <jsp:useBean id="congestionsOnMap" class="com.traffic.map.CongestionsOnMap" />
 
+<script>
+	function loadMap() {
+		if(<%=congestionsOnMap.hasNewCongestion() %>) {
+			location.reload();
+		}
+		setTimeout(loadMap, 150000);
+	}
+</script>
+<%congestionsOnMap.reload();%>
+
 <body>
-
-	<script>
-		if(<%=congestionsOnMap.hasNewCongestion() %>) { location.reload(); 	}
-	</script>
-
-	<%congestionsOnMap.reload();%>
 	<div style="margin: 2% 8% 0 8%; height: 500px; border: 2px solid #3872ac;">
 		<div id="map" style="width: 100%; height: 100%"></div> 
 	</div>

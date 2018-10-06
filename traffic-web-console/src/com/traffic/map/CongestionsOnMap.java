@@ -13,7 +13,7 @@ public class CongestionsOnMap {
 	private Set<Place> smallCongestions = new HashSet<>();
 	private Set<Place> largeCongestions = new HashSet<>();
 	private Set<Place> unUnsualCongestions = new HashSet<>();
-	
+
 	public boolean hasNewCongestion() {
 		return backEnd.hasNewCongestion();
 	}
@@ -25,8 +25,9 @@ public class CongestionsOnMap {
 				smallCongestions.addAll(congestion);
 			else if (congestion.getType() == Congestion.CongestionType.LARGE.getValue()) {
 				int ctr = 0;
+				int modFactor = (congestion.size() < 10) ? 3 : (congestion.size() < 50) ? 4 : 5;
 				for (Place place : congestion) {
-					if (ctr % 3 == 0)
+					if (ctr++ % modFactor == 0)
 						largeCongestions.add(place);
 				}
 			} else
@@ -42,9 +43,18 @@ public class CongestionsOnMap {
 		Iterator<Place> itr = congestionsSet.iterator();
 		while (itr.hasNext()) {
 			Place p = itr.next();
-			sb.append("\t[" + p.getLat() + ", " + p.getLng() + ", \"" + p.getAddress() + "\"] ,\n");
+			sb.append("\t" + getCongestionsArray(p) + " ,\n");
 		}
 		sb.deleteCharAt(sb.length() - 2);
+		return sb.append("]").toString();
+	}
+
+	private String getCongestionsArray(Place p) {
+		StringBuilder sb = new StringBuilder("[");
+		sb.append(p.getLat() + ", ");
+		sb.append(p.getLng() + ", ");
+		sb.append("\"" + p.getShortAddress() + "\", ");
+		sb.append("\"" + p.getPlaceId() + "\"");
 		return sb.append("]").toString();
 	}
 

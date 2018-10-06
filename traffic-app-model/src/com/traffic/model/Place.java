@@ -30,6 +30,16 @@ public class Place {
 		return address;
 	}
 
+	public String getShortAddress() {
+		String[] temp = address.split(",");
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		while (i < temp.length - 3) {
+			sb.append(temp[i++] + ",");
+		}
+		return sb.append(temp[i]).toString();
+	}
+
 	public Integer getFreeFlowSpeed() {
 		return freeFlowSpeed;
 	}

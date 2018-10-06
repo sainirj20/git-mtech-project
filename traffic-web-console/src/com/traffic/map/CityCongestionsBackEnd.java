@@ -32,6 +32,9 @@ final public class CityCongestionsBackEnd {
 	}
 
 	public List<Congestion> getGroups() {
+		if (null == groups) {
+			groups = clustersDao.getAll();
+		}
 		return groups;
 	}
 }

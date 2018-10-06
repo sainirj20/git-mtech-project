@@ -8,9 +8,27 @@
 	<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link type="text/css" rel="stylesheet" href="css/style.css"/>
-	<% response.setIntHeader("Refresh", 5*60); %>
+	
+	<%	response.setHeader("Cache-Control","no-cache"); 
+		response.setHeader("Pragma","no-cache"); 
+		response.setDateHeader("Expires", -1); 
+		response.setHeader("Cache-Control","no-store");
+	%>
+
 </head>
+
 <script src="js/onload.js"></script>
+
+<script>
+	function loadClock(){
+		var dt = new Date();
+		var dateString = dt.toString().replace(' GMT+0530 (India Standard Time)', '');
+		var lastUpdates = dateString.slice(dateString.length - 8, dateString.length - 4) + '0';
+		document.getElementById("currentDate").innerHTML = dateString;
+		document.getElementById("lastUpdated").innerHTML = 'Map Updated at ' + lastUpdates;
+		setTimeout(loadClock, 500);
+	}
+</script>
 
 <body onload="onLoad()">
 

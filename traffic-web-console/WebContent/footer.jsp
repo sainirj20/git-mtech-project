@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page import="java.util.Map" %>
+<%@ page import="com.traffic.model.Congestion" %>
 
 <body>
 <footer id="footer">
@@ -37,12 +39,14 @@
 			</div>
 
 			<div class="col-md-3">
+			<jsp:useBean id="congestionSize" class="com.traffic.map.CongestionSize" />
+			<% Map<Congestion.CongestionType, Integer> countMap = congestionSize.getCongestionsCount(); %>
 				<div class="footer-widget">
 					<h3 class="footer-title">Current Congestions</h3>
 					<ul class="footer-links">
-						<li>Small : </li>
-						<li>Large : </li>
-						<li>Unusual :</li>
+						<li>Small : <%= countMap.get(Congestion.CongestionType.SMALL)%> </li>
+						<li>Large : <%= countMap.get(Congestion.CongestionType.LARGE)%> </li>
+						<li>Unusual : <%= countMap.get(Congestion.CongestionType.UNUSUAL)%></li>
 					</ul>
 				</div>
 			</div>
