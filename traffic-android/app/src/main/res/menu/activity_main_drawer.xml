@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="Filter">
+        <menu>
+            <item
+                android:id="@+id/switch_small"
+                android:checked="true"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/filter_switch_small"
+                app:actionLayout="@layout/switch_filter_small" />
+            <item
+                android:id="@+id/switch_large"
+                android:checked="true"
+                android:title="@string/filter_switch_large"
+                app:actionLayout="@layout/switch_filter_large" />
+            <item
+                android:id="@+id/switch_unusual"
+                android:checked="true"
+                android:title="@string/filter_switch_unusual"
+               app:actionLayout="@layout/switch_filter_unusual" />
+        </menu>
+    </item>
+
+
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>
+
+</menu>
