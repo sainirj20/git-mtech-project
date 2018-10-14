@@ -1,3 +1,5 @@
+<%@page import="com.traffic.model.GeoLocation"%>
+<%@page import="com.traffic.dao.GeoLocationDao"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
@@ -13,7 +15,10 @@
 		setTimeout(loadMap, 150000);
 	}
 </script>
-<%congestionsOnMap.reload();%>
+<%
+	congestionsOnMap.reload();	
+	GeoLocation geoLocation = congestionsOnMap.getGeoLocation();
+%>
 
 <body>
 	<div style="margin: 2% 8% 0 8%; height: 500px; border: 2px solid #3872ac;">
@@ -24,8 +29,8 @@
 	<script>
 		function applyFilter() {
 			const map = new google.maps.Map(document.getElementById('map'), {
-			  zoom: 13,
-			  center: new google.maps.LatLng(12.972442, 77.580643),
+			  zoom: <%=geoLocation.getZoom()%> +3,
+			  center: new google.maps.LatLng(<%=geoLocation.getLatitude() %>, <%=geoLocation.getLongitude() %>),
 			  mapTypeId: google.maps.MapTypeId.ROADMAP
 			});
 		

@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.traffic.dao.GeoLocationDao;
 import com.traffic.dao.PlacesDao;
+import com.traffic.model.GeoLocation;
 import com.traffic.model.Place;
 import com.traffic.utils.GoogleAPIsUtil;
 import com.traffic.utils.StopWatch;
@@ -15,11 +17,12 @@ public class PlacesService {
 	private final PlacesDao placesDao = new PlacesDao();
 	private final PlaceDetailsTask detailsTask = new PlaceDetailsTask();
 	private Map<String, Place> placesMap;
-
+	private final GeoLocation location = new GeoLocationDao().getDetails();
+	
 	@SuppressWarnings("unchecked")
 	private void fetchFreeflowSpeed() throws IOException {
-		Map<String, Object> response = GoogleAPIsUtil
-				.getResponse(URLBuilder.getRoadApiURL(732, 474, URLBuilder.RoadApi.freeFlow));
+		Map<String, Object> response = GoogleAPIsUtil.getResponse(URLBuilder.getRoadApiURL(location.getTileX(),
+				location.getTileY(), location.getZoom(), URLBuilder.RoadApi.freeFlow));
 
 		List<String> placeIds = (List<String>) response.get("placeIds");
 		List<Integer> freeFlowSpeeds = (List<Integer>) response.get("freeflowSpeeds");
@@ -38,8 +41,8 @@ public class PlacesService {
 
 	@SuppressWarnings("unchecked")
 	private void fetchCurrentSpeeds() throws IOException {
-		Map<String, Object> response = GoogleAPIsUtil
-				.getResponse(URLBuilder.getRoadApiURL(732, 474, URLBuilder.RoadApi.current));
+		Map<String, Object> response = GoogleAPIsUtil.getResponse(URLBuilder.getRoadApiURL(location.getTileX(),
+				location.getTileY(), location.getZoom(), URLBuilder.RoadApi.current));
 
 		List<String> placeIds = (List<String>) response.get("placeIds");
 		List<Integer> currentSpeeds = (List<Integer>) response.get("currentSpeeds");

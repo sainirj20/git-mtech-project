@@ -45,12 +45,12 @@
 					</li>
 					<li class="cat-2">
 						<a href="#">
-						<font <% if(session.getAttribute("pageName").equals("HISTORY")) {%> color="#ff8700"<%}%> >History</font>
+						<font <% if(session.getAttribute("pageName").equals("HISTORY")) {%> color="#ff8700"<%}%> >Statistics</font>
 						</a>
 					</li>
 					<li class="cat-4">
-						<a href="#">
-						<font <% if(session.getAttribute("pageName").equals("CHARTS")) {%> color="#8d00ff"<%}%> >Charts</font>
+						<a href="admin.jsp">
+						<font <% if(session.getAttribute("pageName").equals("ADMIN")) {%> color="#8d00ff"<%}%> >Admin</font>
 						</a>
 					</li>
 					<li><div style="margin-right: 140px" class="nav-menu-time-display"><div>&nbsp;&nbsp;&nbsp;</div></div></li>

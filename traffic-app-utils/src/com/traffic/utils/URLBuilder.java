@@ -51,20 +51,20 @@ public class URLBuilder {
 		String freeFlow = "FREEFLOW";
 		String current = "CURRENT";
 		NameValuePair units = new BasicNameValuePair("units", "KPH");
-		NameValuePair zoom = new BasicNameValuePair("zoom", "10");
 	}
 
-	public static URL getRoadApiURL(Integer x, Integer y, String type) {
+	public static URL getRoadApiURL(Integer x, Integer y, Integer zoom, String type) {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("type", type));
 		params.add(new BasicNameValuePair("x", x.toString()));
 		params.add(new BasicNameValuePair("y", y.toString()));
+		params.add(new BasicNameValuePair("zoom", zoom.toString()));
 
 		URIBuilder builder = new URIBuilder();
 		builder.setScheme(scheme);
 		builder.setHost(RoadApi.url);
 		builder.setPath(RoadApi.path);
-		builder.setParameters(KeyStore.getKey(), RoadApi.units, RoadApi.zoom);
+		builder.setParameters(KeyStore.getKey(), RoadApi.units);
 		builder.addParameters(params);
 		return getURL(builder);
 	}

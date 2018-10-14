@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.traffic.model.Congestion;
+import com.traffic.model.GeoLocation;
 import com.traffic.model.Place;
 
 public class CongestionsOnMap {
@@ -16,6 +17,14 @@ public class CongestionsOnMap {
 
 	public boolean hasNewCongestion() {
 		return backEnd.hasNewCongestion();
+	}
+
+	public GeoLocation getGeoLocation() {
+		return backEnd.getGeoLocation();
+	}
+	
+	public void resetGeoLocation(){
+		backEnd.resetGeoLocation();
 	}
 
 	public void reload() {
