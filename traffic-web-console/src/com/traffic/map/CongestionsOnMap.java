@@ -15,6 +15,10 @@ public class CongestionsOnMap {
 	private Set<Place> largeCongestions = new HashSet<>();
 	private Set<Place> unUnsualCongestions = new HashSet<>();
 
+	public Set<Place> getCongestion(int type) {
+		return (1 == type) ? smallCongestions : (2 == type) ? largeCongestions : unUnsualCongestions;
+	}
+
 	public boolean hasNewCongestion() {
 		return backEnd.hasNewCongestion();
 	}
@@ -22,8 +26,8 @@ public class CongestionsOnMap {
 	public GeoLocation getGeoLocation() {
 		return backEnd.getGeoLocation();
 	}
-	
-	public void resetGeoLocation(){
+
+	public void resetGeoLocation() {
 		backEnd.resetGeoLocation();
 	}
 
