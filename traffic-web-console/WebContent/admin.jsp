@@ -2,8 +2,7 @@
 <%@page import="com.traffic.dao.GeoLocationDao"%>
 <%@page import="com.traffic.utils.GeoLoactionUtil"%>
 <%@page import="com.traffic.model.GeoLocation"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <html>
 <% session.setAttribute("pageName", "ADMIN"); %>
 <%@ include file = "header.jsp" %>
@@ -12,22 +11,6 @@
 <script>
 	function loadMap() {}
 </script>
-
-<style>
-	.flex-container {
-		display: flex;
-		flex-wrap: nowrap;
-	}
-	
-	.flex-container > div {
-		background-color: #f1f1f1;
-		width: 100%;
-		margin: 10px;
-		text-align: center;
-		line-height: 75px;
-		font-size: 30px;
-	}
-</style>
 
 <body>
 <%
@@ -63,7 +46,7 @@
 	}
 %>
 
-<div style="margin: 2% 8% 0 8%; height: 310px; border: 2px solid #3872ac;">
+<div style="margin: 2% 8% 0 8%; height: 310px; border: 1px solid #3872ac;">
 	<div class="flex-container">
 		<div>
 		<form action="admin.jsp" method="post">

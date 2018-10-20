@@ -44,8 +44,8 @@
 						</a>
 					</li>
 					<li class="cat-2">
-						<a href="#">
-						<font <% if(session.getAttribute("pageName").equals("HISTORY")) {%> color="#ff8700"<%}%> >Statistics</font>
+						<a href="statistics.jsp">
+						<font <% if(session.getAttribute("pageName").equals("STATISTICS")) {%> color="#ff8700"<%}%> >Statistics</font>
 						</a>
 					</li>
 					<li class="cat-4">

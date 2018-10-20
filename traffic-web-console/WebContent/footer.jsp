@@ -30,7 +30,7 @@
 							<h3 class="footer-title">Explore</h3>
 							<ul class="footer-links">
 								<li><a href="home.jsp">Home</a></li>
-								<li><a href="#">Statistics</a></li>
+								<li><a href="statistics.jsp">Statistics</a></li>
 								<li><a href="admin.jsp">Admin</a></li>
 							</ul>
 						</div>

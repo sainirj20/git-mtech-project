@@ -21,7 +21,7 @@ function addCircle(map, congestions, circleRadius, color) {
 				map.getDiv().removeAttribute('title');
 			}));
 	listeners.push(google.maps.event.addListener(circle, 'click', function() {
-		window.location.href = "history?placeId="+congestions[3];
+		window.location.href = "statistics.jsp?placeId="+congestions[3];
 	}));
 	return {
 		'circle' : circle,

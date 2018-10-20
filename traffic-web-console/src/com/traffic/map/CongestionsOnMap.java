@@ -82,4 +82,7 @@ public class CongestionsOnMap {
 	public String getUnUnsualCongestions() {
 		return getCongestionsList(unUnsualCongestions);
 	}
+	
+	public void getCongestionDetails(String placeId) {
+	}
 }

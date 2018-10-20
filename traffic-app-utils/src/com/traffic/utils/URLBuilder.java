@@ -104,4 +104,23 @@ public class URLBuilder {
 		builder.setCustomQuery(customQuery);
 		return getURL(builder);
 	}
+	
+	private interface SpeedLimitsApi {
+		String url = "roads.googleapis.com";
+		String path = "/v1/speedLimits";
+		NameValuePair units = new BasicNameValuePair("units", "KPH");
+	}
+	
+	public static URL getSpeedLimitsUrl(String placeId) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("placeId", placeId));
+
+		URIBuilder builder = new URIBuilder();
+		builder.setScheme(scheme);
+		builder.setHost(SpeedLimitsApi.url);
+		builder.setPath(SpeedLimitsApi.path);
+		builder.setParameters(KeyStore.getKey(), SpeedLimitsApi.units);
+		builder.addParameters(params);
+		return getURL(builder);
+	}
 }

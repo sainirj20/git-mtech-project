@@ -3,17 +3,23 @@ package com.traffic.map;
 import java.util.List;
 
 import com.traffic.dao.CityCongestionsDao;
+import com.traffic.dao.CongestionHistoryDao;
 import com.traffic.dao.GeoLocationDao;
 import com.traffic.model.Congestion;
+import com.traffic.model.CongestionHistory;
 import com.traffic.model.GeoLocation;
 
 final public class CityCongestionsBackEnd {
 	private static CityCongestionsBackEnd instance = new CityCongestionsBackEnd();
 
 	private CityCongestionsDao clustersDao = new CityCongestionsDao();
+	private CongestionHistoryDao historyDao = new CongestionHistoryDao();
+
 	private List<Congestion> groups;
 	private GeoLocationDao geoLocationDao = new GeoLocationDao();
 	private GeoLocation geoLocation = geoLocationDao.getDetails();
+	
+	private List<CongestionHistory> todaysHistory = historyDao.getTodaysHistory();
 
 	private CityCongestionsBackEnd() {
 	}
@@ -48,6 +54,10 @@ final public class CityCongestionsBackEnd {
 	
 	public void resetGeoLocation(){
 		geoLocation = geoLocationDao.getDetails();
+	}
+	
+	public List<CongestionHistory> getTodaysHistory() {
+		return todaysHistory;
 	}
 
 }
