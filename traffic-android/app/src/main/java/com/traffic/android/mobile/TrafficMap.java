@@ -4,13 +4,13 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.traffic.android.util.WebServiceClient;
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ public class TrafficMap implements OnMapReadyCallback {
     private GoogleMap mMap;
     private LatLng mapCenter;
     private Integer zoom = 5;
+    private String city = "city name from db";
     private String oldFilter = "false-false-false";
 
     private List<Map<String, Object>> smallCongestions;
@@ -35,6 +36,7 @@ public class TrafficMap implements OnMapReadyCallback {
             WebServiceClient client = new WebServiceClient();
             Map<String, Object> response = client.getResponse();
             mapCenter = new LatLng((Double) response.get("latitude"), (Double) response.get("longitude"));
+            city = (String) response.get("city");
             zoom = (Integer) response.get("zoom");
             zoom += 2;
             smallCongestions = (List<Map<String, Object>>) response.get("small");
@@ -56,16 +58,19 @@ public class TrafficMap implements OnMapReadyCallback {
         mMap = googleMap;
         float zoomLevel = (float) zoom;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapCenter, zoomLevel));
-        onFilterChange();
+        onFilterChange(false);
     }
 
-    public void onFilterChange() {
+    public void onFilterChange(boolean forceChange) {
         Switch smallSwitch = activity.findViewById(R.id.filter_small);
         Switch largeSwitch = activity.findViewById(R.id.filter_large);
         Switch unsualSwitch = activity.findViewById(R.id.filter_unusual);
 
+        TextView cityName = activity.findViewById(R.id.nav_text_city_name);
+        cityName.setText(city);
+
         String currentFilter = smallSwitch.isChecked() + "-" + largeSwitch.isChecked() + "-" + unsualSwitch.isChecked();
-        if (oldFilter.equals(currentFilter)) {
+        if (!forceChange && oldFilter.equals(currentFilter)) {
             return;
         } else {
             oldFilter = currentFilter;

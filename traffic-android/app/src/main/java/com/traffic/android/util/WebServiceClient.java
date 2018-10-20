@@ -15,8 +15,6 @@ public class WebServiceClient {
     private static TypeReference<Map<String, Object>> ref = new TypeReference<Map<String, Object>>() {
     };
 
-    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
     public WebServiceClient() {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -25,7 +23,6 @@ public class WebServiceClient {
 
     public Map<String, Object> getResponse() throws IOException {
         URL url = new URL("http://192.168.0.13:8080/traffic-web-console/TrafficApp/CongestionsResponse/congestions?user=rajat");
-        Map<String, Object> response = objectMapper.readValue(url, ref);
-        return response;
+        return objectMapper.readValue(url, ref);
     }
 }
